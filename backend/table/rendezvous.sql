@@ -1,0 +1,6 @@
+CREATE TABLE rendezvous (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  heure Date (255) NOT NULL,
+ nom VARCHAR(255) NOT NULL,
+  date  DATE NOT NULL
+);

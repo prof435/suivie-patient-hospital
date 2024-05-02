@@ -1,0 +1,60 @@
+.consultation {
+    background-color: #f8f8f8;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  h1 {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .links-container {
+    display: flex;
+    justify-content: center;
+  }
+  
+  a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 10px;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+  }
+  
+  a:hover {
+    background-color: #0056b3;
+  }
+  
+  .icon {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 5px;
+  }
+ /** Dans cet exemple de CSS, nous avons défini un style pour la page de l'hôpital avec un fond clair, des titres centrés, des liens stylisés avec des icônes et des transitions au survol. Vous pouvez personnaliser davantage le style en modifiant les couleurs, les tailles d'icônes et les marges pour correspondre à la conception de votre hôpital.
+  
+  Assurez-vous d'ajuster les liens (href), les noms des images des icônes (videoIcon, audioIcon et messageIcon) et le contenu de la page en fonction de vos besoins spécifiques, ainsi que de placer les images des icônes dans un dossier icons dans votre projet.
+  
+  Partager
+  
+  
+  
+  
+  Dites-m'en plus.
+  Comparer
+  Image du bot pour Command-R
+  @Command-R
+  Comparer
+  Image du bot pour Llama-3-70b-Inst-FW
+  @Llama-3-70b-Inst-FW
+  Comparer
+  Image du bot pour Mixtral-8x7B-Chat
+  @Mixtral-8x7B-Chat
+  
+  

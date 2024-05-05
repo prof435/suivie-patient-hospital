@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Header from '../partials/header';
 import Footer from '../partials/footer';
 
-const  inscription = () => {
+const Inscription = () => {
   const [nom, setNom] = useState('');
   const [prenom, setPrenom] = useState('');
   const [email, setEmail] = useState('');
@@ -30,13 +30,17 @@ const  inscription = () => {
   };
 
   return (
-    <div>
+    <>
+        <Header/>
+    
+    <div style = {{width:'51%',position: 'relative',left: '25%'}}>
       <h1>  inscription</h1>
+      <div className='form-container'>
       <form onSubmit={handleSubmit}>
         <div>
           <label>Nom:</label>
           <input type="text" value={nom} onChange={handleNomChange} required />
-        </div>
+        </div> 
         <div>
           <label>Prénom:</label>
           <input type="text" value={prenom} onChange={handlePrenomChange} required />
@@ -54,11 +58,15 @@ const  inscription = () => {
         </div>
         
       </form>
+      </div>
     </div>
+    
+    <Footer/>
+        </>
   );
 };
 
-export default inscription;
+export default Inscription;
 
 
 

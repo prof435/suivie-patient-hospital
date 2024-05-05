@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import './suiviSante.css'; // Import du fichier CSS personnalisé
-import 'bootstrap/dist/css/bootstrap.min.css'; // Import du fichier CSS Bootstrap
+import Header from '../partials/header';
+import Footer from '../partials/footer';
+import { Link } from 'react-router-dom';
 
 const Docteur = () => {
   const [patients, setPatients] = useState([]);
-  const history = useHistory(); // Utilisation de useHistory pour la navigation
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
+  const [appointmentDetails, setAppointmentDetails] = useState({});
+  const [confirmation, setConfirmation] = useState(false);
 
   useEffect(() => {
     // Récupérer les informations des patients depuis le backend Express.js
@@ -16,60 +19,74 @@ const Docteur = () => {
   }, []);
 
   const handleAccueilClick = () => {
-    history.push('/accueil'); // Redirection vers la page d'accueil
+    window.location.href = '/accueil'; // Redirection vers la page d'accueil
+  };
+
+  const handleDateSelect = (date) => {
+    setSelectedDate(date);
+  };
+
+  const handleDoctorSelect = (doctor) => {
+    setSelectedDoctor(doctor);
+  };
+
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
+    // Enregistrer les détails du rendez-vous
+    setAppointmentDetails({
+      date: selectedDate,
+      doctor: selectedDoctor,
+      // Ajoutez ici d'autres détails du rendez-vous provenant du formulaire
+    });
+    setConfirmation(true);
   };
 
   return (
-    <div className="Docteur" style={{ backgroundImage: "url('chemin_vers_votre_image')" }}>
-      <div className="container">
-        <h1 className="titre">Consulter un dossier médical</h1>
+    <>
+      <Header />
+      <div className="Docteur" style={{ backgroundImage: "url('chemin_vers_votre_image')" }}>
+        <div className="container">
+          <h1 className="titre">Prenez un rendez-vous</h1>
 
-        <div className="information-patient">
-          <h2>Informations du patient</h2>
-          {patients.length > 0 ? ( // Vérification s'il y a des patients enregistrés
-            <ul className="list-group">
-              {patients.map((patient) => ( // Boucle pour afficher les informations de chaque patient
-                <li key={patient.id} className="list-group-item">
-                  <p>
-                    <strong>Nom:</strong> {patient.nom}
-                  </p>
-                  <p>
-                    <strong>Prénom:</strong> {patient.prenom}
-                  </p>
-                  <p>
-                    <strong>Adresse:</strong> {patient.adresse}
-                  </p>
-                  <p>
-                    <strong>Email:</strong> {patient.email}
-                  </p>
-                  <p>
-                    <strong>Sexe:</strong> {patient.sexe}
-                  </p>
-                  <p>
-                    <strong>Date:</strong> {patient.date}
-                  </p>
-                  <p>
-                    <strong>Heure:</strong> {patient.heure}
-                  </p>
-                  <p>
-                    <strong>Service sollicité:</strong> {patient.service}
-                  </p>
-                  <Link to={`/bilan/${patient.id}`} className="btn btn-primary">
-                    Bilan de santé
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>Aucun patient enregistré</p>
+          <div className="calendrier">
+            <h2>Calendrier des rendez-vous</h2>
+            {/* Afficher le calendrier des rendez-vous ici */}
+            <Calendar onDateSelect={handleDateSelect} />
+          </div>
+
+          <div className="selection-medecin">
+            <h2>Sélection du médecin</h2>
+            {/* Afficher la liste des médecins avec leurs informations ici */}
+            <DoctorList doctors={doctors} onDoctorSelect={handleDoctorSelect} />
+          </div>
+
+          <div className="formulaire-rendezvous">
+            <h2>Formulaire de rendez-vous</h2>
+            {/* Afficher le formulaire de rendez-vous ici */}
+            <AppointmentForm onSubmit={handleFormSubmit} />
+          </div>
+
+          {confirmation && (
+            <div className="confirmation-rendezvous">
+              <h2>Confirmation du rendez-vous</h2>
+              {/* Afficher la section de confirmation du rendez-vous ici */}
+              <AppointmentConfirmation details={appointmentDetails} />
+            </div>
           )}
-        </div>
 
-        <button className="btn btn-primary" onClick={handleAccueilClick}>
-          Retour à l'accueil
-        </button>
+          <div className="messages-notifications">
+            <h2>Messages et notifications</h2>
+            {/* Afficher les messages et les notifications liés aux rendez-vous ici */}
+            <AppointmentMessages />
+          </div>
+
+          <button className="btn btn-primary" onClick={handleAccueilClick}>
+            Retour à l'accueil
+          </button>
+        </div>
       </div>
-    </div>
+      <Footer />
+    </>
   );
 };
 

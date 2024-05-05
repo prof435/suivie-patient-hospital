@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import './Docteur.css'; // Import du fichier CSS personnalisé
-import 'bootstrap/dist/css/bootstrap.min.css'; // Import du fichier CSS Bootstrap
+import Header from '../partials/header';
+import Footer from '../partials/footer';
+//import './Docteur.css'; // Import du fichier CSS personnalisé
+//import 'bootstrap/dist/css/bootstrap.min.css'; // Import du fichier CSS Bootstrap
 
 const Docteur = () => {
   const [patients, setPatients] = useState([]);
@@ -15,13 +17,15 @@ const Docteur = () => {
   }, []);
 
   return (
+    <>
+        <Header/>
     <div className="Docteur" style={{ backgroundImage: "url('chemin_vers_votre_image')" }}>
       <div className="container">
         <h1 className="titre">Consulter un dossier médical</h1>
 
         <div className="information-patient">
           <h2>Informations du patient</h2>
-          {patients.length > 0 ? ( // Vérification s'il y a des patients enregistrés
+          {patients.length > 0?( // Vérification s'il y a des patients enregistrés
             <ul className="list-group">
               {patients.map((patient) => ( // Boucle pour afficher les informations de chaque patient
                 <li key={patient.id} className="list-group-item">
@@ -61,6 +65,8 @@ const Docteur = () => {
         </div>
       </div>
     </div>
+    <Footer/>
+        </>
   );
 };
 

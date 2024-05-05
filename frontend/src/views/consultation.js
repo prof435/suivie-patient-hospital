@@ -1,30 +1,72 @@
 import React from 'react';
-import './consultation.css'; // Fichier CSS pour le style de la page
-import videoIcon from './icons/video-icon.png';// Importation de l'icône pour l'appel vidéo
-import audioIcon from './icons/audio-icon.png'; // Importation de l'icône pour l'appel audio
-import messageIcon from './icons/message-icon.png'; // Importation de l'icône pour les messages
+import { Link } from 'react-router-dom';
+import MedecinGeneraliste from './MedecinGeneraliste';
+import Header from '../partials/header';
+import Footer from '../partials/footer';
+// import './consultation.css'; // Import du fichier CSS pour le style
 
 const Consultation = () => {
-return (
-    <div className="consultation">
-      <h1>Faites vous consulter ici</h1>
-      <div className="links-container">
-        <a href="lien-de-l-appel-video" className="video-link">
-          <img src={videoIcon} alt="Appel vidéo" className="icon" />
-        <span>Appel vidéo</span>
-    </a>
-    <a href="lien-de-l-appel-audio" className="audio-link">
-        <img src={audioIcon} alt="Appel audio" className="icon" />
-        <span>Appel audio</span>
-    </a><a href="lien-des-messages" className="message-link">
-         <img src={messageIcon} alt="Messages" className="icon" />
-        <span>Messages</span>
-    </a>
+  return (
+    <>
+      <Header />
+      <div className="consultation">
+        <h1> Qu'elle expert aimerez rencontrer?</h1>
+
+        <div className="specialist-links">
+          <h2>Spécialistes en médecine</h2>
+          <ul>
+            <li>
+              <Link to="/medecin-generaliste">MédecinGénéraliste</Link> {/* Lien vers la page du médecin généraliste */}
+            </li>
+            <li>
+              <Link to="/dentiste">Dentiste</Link> {/* Lien vers la page du dentiste */}
+            </li>
+            <li>
+              <Link to="/cardiologue">Cardiologue</Link> {/* Lien vers la page du cardiologue */}
+            </li>
+            <li>
+              <Link to="/dermatologue">psychologue</Link> {/* Lien vers la page du dermatologue */}
+            </li>
+            <li>
+              <Link to="/ophtalmologue">Ophtalmologue</Link> {/* Lien vers la page de l'ophtalmologue */}
+            </li>
+            <li>
+              <Link to="/gynecologue">Gynécologue</Link> {/* Lien vers la page du gynécologue */}
+            </li>
+            <li>
+              <Link to="/pediatre">Pédiatre</Link> {/* Lien vers la page du pédiatre */}
+            </li>
+            <li>
+              <Link to="/psychiatre">Psychiatre</Link> {/* Lien vers la page du psychiatre */}
+            </li>
+            <li>
+              <Link to="/orthopediste">Orthopédiste</Link> {/* Lien vers la page de l'orthopédiste */}
+            </li>
+            <li>
+              <Link to="/gastro-enterologue">Gastro-entérologue</Link> {/* Lien vers la page du gastro-entérologue */}
+            </li>
+          </ul>
+        </div>
+
+        <div className="secure-communication">
+          <h2>Communication sécurisée</h2>
+          {/* Intégrez ici le système de messagerie sécurisé */}
+        </div>
+
+        <div className="alerts-reminders">
+          <h2>Alertes et rappels</h2>
+          {/* Intégrez ici le système d'alertes et de rappels automatisés */}
+        </div>
+
+        <div className="education-resources">
+          <h2>Éducation et ressources</h2>
+          {/* Fournissez ici des ressources éducatives pertinentes */}
+        </div>
+
       </div>
-    </div>
+      <Footer />
+    </>
   );
 };
 
-export default Consultation;   
-
-//importer correctement les fichiers CSS et les images des icônes dans les emplacements appropriés de votre projet pour qu'ils soient accessibles à partir de ces chemins relatifs ('./consultation.css', './icons/video-icon.png', 
+export default Consultation;

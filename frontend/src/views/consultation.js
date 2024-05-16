@@ -9,44 +9,36 @@ const Consultation = () => {
   return (
     <>
       <Header />
-      <div className="consultation">
-        <h1> Qu'elle expert aimerez rencontrer?</h1>
+      <div className="container " >
+        <h1> Commwent vous-sentez vous aujourd'hui ?</h1>
+        <div class="container" style={{display:"inline-bloc"}}>
+          <br/>
+          <form className='form-container'>
+            <div className='form-group'>
+              <label >Décrivez votre problème</label>
+              <textarea className='forn-control' placeholder="J'ai..." rows="4"></textarea>
+            </div>
+          <br/>
 
-        <div className="specialist-links">
-          <h2>Spécialistes en médecine</h2>
-          <ul>
-            <li>
-              <Link to="/medecin-generaliste">MédecinGénéraliste</Link> {/* Lien vers la page du médecin généraliste */}
-            </li>
-            <li>
-              <Link to="/dentiste">Dentiste</Link> {/* Lien vers la page du dentiste */}
-            </li>
-            <li>
-              <Link to="/cardiologue">Cardiologue</Link> {/* Lien vers la page du cardiologue */}
-            </li>
-            <li>
-              <Link to="/dermatologue">psychologue</Link> {/* Lien vers la page du dermatologue */}
-            </li>
-            <li>
-              <Link to="/ophtalmologue">Ophtalmologue</Link> {/* Lien vers la page de l'ophtalmologue */}
-            </li>
-            <li>
-              <Link to="/gynecologue">Gynécologue</Link> {/* Lien vers la page du gynécologue */}
-            </li>
-            <li>
-              <Link to="/pediatre">Pédiatre</Link> {/* Lien vers la page du pédiatre */}
-            </li>
-            <li>
-              <Link to="/psychiatre">Psychiatre</Link> {/* Lien vers la page du psychiatre */}
-            </li>
-            <li>
-              <Link to="/orthopediste">Orthopédiste</Link> {/* Lien vers la page de l'orthopédiste */}
-            </li>
-            <li>
-              <Link to="/gastro-enterologue">Gastro-entérologue</Link> {/* Lien vers la page du gastro-entérologue */}
-            </li>
-          </ul>
-        </div>
+            <div className='form-group'>
+              <label>Quel service est le mieux adapté à vos besoins ?</label>
+               <label>Je ne sais pas <input    type='checkbox'/></label>
+              <select className='form-select'>
+                <option value="">----------------</option>
+                <option value="Médecine générale">Médecine générale</option>
+                <option value="Ophtalmologie">Ophtalmologie</option>
+                <option value="Dentisterie">Dentisterie</option>
+                <option value="Psychologie">Psychologie</option>
+                <option value="Pédiatrie">Pédiatrie</option>
+              </select>
+            </div>
+          <br/>
+            <div className='form-group'>
+              <button className='btn btn-info'>Soumettre</button>
+            </div>
+    </form>
+  </div>
+        
 
         <div className="secure-communication">
           <h2>Communication sécurisée</h2>

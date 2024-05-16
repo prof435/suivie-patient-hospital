@@ -1,44 +1,39 @@
 import React from "react";  
 
-
-const Header = ()=>{
-    return(
-        <>
-            
-        
-        
-            
-            <div class="container-fluid bg-light p-0 wow fadeIn" data-wow-delay="0.1s">
-                <div class="row gx-0 d-none d-lg-flex">
-                    <div class="col-lg-7 px-5 text-start">
-                        <div class="h-100 d-inline-flex align-items-center py-3 me-4">
-                            <small class="fa fa-map-marker-alt text-primary me-2"></small>
-                            <small>123 Street,yaounde , cameroun</small>
-                        </div>
-                        <div class="h-100 d-inline-flex align-items-center py-3">
-                            <small class="far fa-clock text-primary me-2"></small>
-                            <small>Mon - Fri : 09.00 AM - 09.00 PM</small>
-                        </div>
-                    </div>
-                    <div class="col-lg-5 px-5 text-end">
-                        <div class="h-100 d-inline-flex align-items-center py-3 me-4">
-                            <small class="fa fa-phone-alt text-primary me-2"></small>
-                            <small>+237 658 90 33 73</small>
-                        </div>
-                        <div class="h-100 d-inline-flex align-items-center">
-                            <a class="btn btn-sm-square rounded-circle bg-white text-primary me-1" href=""><i class="fab fa-facebook-f"></i></a>
-                            <a class="btn btn-sm-square rounded-circle bg-white text-primary me-1" href=""><i class="fab fa-twitter"></i></a>
-                            <a class="btn btn-sm-square rounded-circle bg-white text-primary me-1" href=""><i class="fab fa-linkedin-in"></i></a>
-                            <a class="btn btn-sm-square rounded-circle bg-white text-primary me-0" href=""><i class="fab fa-instagram"></i></a>
-                        </div>
-                    </div>
+const TopNav = ()=>{
+    return (
+        <div class="container-fluid bg-light p-0 wow fadeIn" data-wow-delay="0.1s">
+        <div class="row gx-0 d-none d-lg-flex">
+            <div class="col-lg-7 px-5 text-start">
+                <div class="h-100 d-inline-flex align-items-center py-3 me-4">
+                    <small class="fa fa-map-marker-alt text-primary me-2"></small>
+                    <small>123 Street,yaounde , cameroun</small>
+                </div>
+                <div class="h-100 d-inline-flex align-items-center py-3">
+                    <small class="far fa-clock text-primary me-2"></small>
+                    <small>Mon - Fri : 09.00 AM - 09.00 PM</small>
                 </div>
             </div>
-            {/*<!-- Topbar End -->*/
-        
-        
-        /* <!-- Navbar Start -->*/}
-            <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top p-0 wow fadeIn" data-wow-delay="0.1s">
+            <div class="col-lg-5 px-5 text-end">
+                <div class="h-100 d-inline-flex align-items-center py-3 me-4">
+                    <small class="fa fa-phone-alt text-primary me-2"></small>
+                    <small>+237 658 90 33 73</small>
+                </div>
+                <div class="h-100 d-inline-flex align-items-center">
+                    <a class="btn btn-sm-square rounded-circle bg-white text-primary me-1" href=""><i class="fab fa-facebook-f"></i></a>
+                    <a class="btn btn-sm-square rounded-circle bg-white text-primary me-1" href=""><i class="fab fa-twitter"></i></a>
+                    <a class="btn btn-sm-square rounded-circle bg-white text-primary me-1" href=""><i class="fab fa-linkedin-in"></i></a>
+                    <a class="btn btn-sm-square rounded-circle bg-white text-primary me-0" href=""><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    );
+};
+
+const NavBAr = ()=>{
+    return(
+        <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top p-0 wow fadeIn" data-wow-delay="0.1s">
                 <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
                     <h1 class="m-0 text-primary"><i class="far fa-hospital me-3"></i>dimisante</h1>
                 </a>
@@ -65,11 +60,13 @@ const Header = ()=>{
                     <a href="" class="btn btn-primary rounded-0 py-4 px-lg-5 d-none d-lg-block">Appointment<i class="fa fa-arrow-right ms-3"></i></a>
                 </div>
             </nav>
-        {/* <!-- Navbar End -->*/}
-        
-        
-        {/* <!-- Header Start -->*/}
-            <div class="container-fluid header bg-primary p-0 mb-5">
+    );
+};
+
+
+const BonttonNav = ()=>{
+    return(
+        <div class="container-fluid header bg-primary p-0 mb-5">
                 <div class="row g-0 align-items-center flex-column-reverse flex-lg-row">
                     <div class="col-lg-6 p-5 wow fadeIn" data-wow-delay="0.1s">
                         <h1 class="display-4 text-white mb-5">Good Health Is The Root Of All Heppiness take an appointment  </h1>
@@ -118,10 +115,32 @@ const Header = ()=>{
                     </div>
                 </div>
             </div>
+    );
+};
+
+
+const Header = ()=>{
+    return(
+        <>
+            
+        
+        
+            
+           
+            {/*<!-- Topbar End -->*/
+        <TopNav />
+        
+        /* <!-- Navbar Start -->*/}
+            <NavBAr />
+        {/* <!-- Navbar End -->*/}
+        
+        
+        {/* <!-- Header Start -->*/}
+            <BonttonNav />
         </>
     
     );
 };
 
-
+export { NavBAr, TopNav, BonttonNav};
 export default Header;

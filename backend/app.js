@@ -37,6 +37,37 @@ app.listen(5000, () => {
 
 
 
+// Middleware pour vérifier le token d'authentification
+const verifyToken = async (req, res, next) => {
+  try {
+    const token = req.headers.authorization.split(' ')[1];
+    const decoded = jwt.verify(token, 'votre_cle_secrete');
+    req.user = await Utilisateur.findByPk(decoded.id);
+    next();
+  } catch (err) {
+    return res.status(401).json({ error: 'Token d\'authentification invalide' });
+  }
+};
+
+router.post('/consultation', verifyToken, async (req, res) => {
+  try {
+    const { title, description, service, dontKnow } = req.body;
+    const PatientId = req.user.id; // Assurez-vous que l'ID du patient est récupéré correctement
+
+    const consultation = await Consultation.create({
+      date_heure: new Date(), // Utiliser la date et l'heure actuelles
+      title,
+      description,
+      PatientId
+    });
+
+    res.status(201).json(consultation);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
 
 
 
@@ -120,7 +151,7 @@ app.post('/login', async (req, res) => {
     }
 
     // Générer un token JWT
-    const token = jwt.sign({ userId: user.id }, 'votre_cle_secrete', { expiresIn: '1h' });
+    const token = jwt.sign({ userId: user.id }, 'votre_cle_secrete', { expiresIn: '20h' });
 
     res.json({ token });
   } catch (err) {
@@ -130,19 +161,7 @@ app.post('/login', async (req, res) => {
 
 
 
-// ...
 
-// Middleware pour vérifier le token d'authentification
-const verifyToken = async (req, res, next) => {
-  try {
-    const token = req.headers.authorization.split(' ')[1];
-    const decoded = jwt.verify(token, 'votre_cle_secrete');
-    req.user = await Utilisateur.findByPk(decoded.userId);
-    next();
-  } catch (err) {
-    return res.status(401).json({ error: 'Token d\'authentification invalide' });
-  }
-};
 
 // Mise à jour des informations utilisateur
 app.put('/users/:id', verifyToken, async (req, res) => {

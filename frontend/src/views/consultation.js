@@ -25,8 +25,15 @@ const Consultation = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem('authToken')
+    const data = {...formData, token: token};
     try {
-      const response = await axios.post('http://localhost:5000/api/consultation', formData);
+      const response = await axios.post('http://localhost:5000/api/consultation', data, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        
+      }});
+      
       setAlert({
         show: true,
         message: 'Demande de consultation soumise avec succès!',

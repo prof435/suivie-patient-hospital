@@ -1,7 +1,7 @@
-const { Sequelize, DataTypes } = require('sequelize');
+const { Sequelize, DataTypes, Model } = require('sequelize');
 
 // Connexion à la base de données
-const sequelize = new Sequelize('dmisante', 'root', '', {
+const sequelize = new Sequelize('dimisante', 'root', '', {
   host: 'localhost',
   dialect: 'mysql'
 });
@@ -37,6 +37,11 @@ const Utilisateur = sequelize.define('Utilisateur', {
   date_de_naissance: {
     type: DataTypes.DATE,
     allowNull: true
+  },
+  date_heure_connexion: {
+    type: DataTypes.DATE,
+    allowNull: true,
+    defaultValue: DataTypes.NOW
   }
 });
 
@@ -59,9 +64,6 @@ const Medecin = sequelize.define('Medecin', {
     type: DataTypes.STRING,
     allowNull: false
   }
-}, {
-  // Héritage de Utilisateur
-  inherits: Utilisateur
 });
 
 // Modèle Patient (hérite de Utilisateur)
@@ -74,10 +76,11 @@ const Patient = sequelize.define('Patient', {
   numero_de_telephone: {
     type: DataTypes.STRING,
     allowNull: false
-  }
-}, {
-  // Héritage de Utilisateur
-  inherits: Utilisateur
+  },
+  allergies: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  }, 
 });
 
 // Modèle Service
@@ -90,98 +93,56 @@ const Service = sequelize.define('Service', {
   nom: {
     type: DataTypes.STRING,
     allowNull: false
+  },
+  description: {
+    type: DataTypes.TEXT,
+    allowNull: true
   }
-});
 
+});
 
 // Modèle Rendez-vous
 const Rendez_vous = sequelize.define('Rendez_vous', {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true
-    },
-    date_heure: {
-      type: DataTypes.DATE,
-      allowNull: false
-    },
-    patient_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: Patient,
-        key: 'id'
-      }
-    },
-    medecin_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: Medecin,
-        key: 'id'
-      }
-    },
-    notes: {
-      type: DataTypes.TEXT,
-      allowNull: true
-    }
-  }, {
-    tableName: 'rendez_vous',
-    timestamps: true,
-    createdAt: 'created_at',
-    updatedAt: 'updated_at'
-  });
-  
-  // Modèle Consultation
-  const Consultation = sequelize.define('Consultation', {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true
-    },
-    date_heure: {
-      type: DataTypes.DATE,
-      allowNull: false
-    },
-    patient_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: Patient,
-        key: 'id'
-      }
-    },
-    medecin_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: Medecin,
-        key: 'id'
-      }
-    },
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: true
-    },
-    rendez_vous_id: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: Rendez_vous,
-        key: 'id'
-      },
-    etat : {
-        type: DataTypes.Boolean,
-        default : false
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  date_heure: {
+    type: DataTypes.DATE,
+    allowNull: false
+  },
+  notes: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  etat: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  },
 
-    }
-    }
-  }, {
-    tableName: 'consultations',
-    timestamps: true,
-    createdAt: 'created_at',
-    updatedAt: 'updated_at'
-  });
+});
+
+// Modèle Consultation
+const Consultation = sequelize.define('Consultation', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  date_heure: {
+    type: DataTypes.DATE,
+    allowNull: false
+  },
+  description: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  etat: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  }
+});
 
 // Modèle Rapport de Consultation
 const RapportConsultation = sequelize.define('RapportConsultation', {
@@ -249,17 +210,33 @@ Medecin.hasMany(Consultation);
 Consultation.belongsTo(Patient);
 Patient.hasMany(Consultation);
 
+Consultation.hasOne(Rendez_vous);
+
+
 Consultation.hasOne(RapportConsultation);
 RapportConsultation.belongsTo(Consultation);
 
 Patient.hasOne(DossierMedical);
 DossierMedical.belongsTo(Patient);
 
+Medecin.hasMany(ChatRoom);
+Medecin.belongsTo(ChatRoom);
+
+Medecin.belongsTo(ChatRoom);
+Patient.hasMany(ChatRoom);
+
+
 ChatRoom.hasMany(Message);
 Message.belongsTo(ChatRoom);
 
 Message.belongsTo(Utilisateur);
 Utilisateur.hasMany(Message);
+
+Rendez_vous.belongsTo(Medecin);
+Rendez_vous.belongsTo(Patient);
+
+Medecin.belongsTo(Utilisateur);
+Patient.belongsTo(Utilisateur);
 
 // Synchronisation des modèles avec la base de données
 sequelize.sync()
@@ -269,3 +246,5 @@ sequelize.sync()
   .catch((err) => {
     console.error('Erreur lors de la synchronisation des modèles:', err);
   });
+
+module.exports =  {sequelize, Utilisateur, Medecin, Patient, Service, ChatRoom, Consultation, Rendez_vous, RapportConsultation, Message, DossierMedical}

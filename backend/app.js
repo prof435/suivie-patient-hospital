@@ -1,19 +1,51 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { Utilisateur, Medecin, Patient } = require('./models');
+const cors = require('cors');
+const {sequelize, Utilisateur, Medecin, Patient, Service, ChatRoom, Consultation, Rendez_vous, RapportConsultation, Message, DossierMedical} = require('./db');
 
 const app = express();
 app.use(express.json());
 
+app.use((req, res, next) => {
+  res.on('finish', () => {
+    const log = {
+      method: req.method,
+      url: req.originalUrl,
+      status: res.statusCode,
+      contentType: req.headers['content-type'],
+      date: new Date().toISOString()
+    };
+    console.log(log);
+  });
+  next();
+});
+
+
+const corsOptions = {
+  origin: 'http://localhost:3000', // Remplacez par l'origine que vous souhaitez autoriser
+  optionsSuccessStatus: 200 // Pour les navigateurs plus anciens (IE11, diverses versions SmartTVs) qui n'acceptent pas les 204 comme réponse
+};
+
+app.use(cors(corsOptions)); 
 
 app.listen(5000, () => {
   console.log('Serveur démarré sur le port 3000');
 });
+
+
+
+
+
+
+
+
+
+
 // Création de compte utilisateur
 app.post('/register', async (req, res) => {
   try {
-    const { nom, prenom, email, mot_de_passe, role, date_de_naissance } = req.body;
+    const { nom, prenom, email, mot_de_passe, role, date_de_naissance, numero_de_telephone } = req.body;
 
     // Vérifier si l'email existe déjà
     const existingUser = await Utilisateur.findOne({ where: { email } });
@@ -25,32 +57,50 @@ app.post('/register', async (req, res) => {
     const hashedPassword = await bcrypt.hash(mot_de_passe, 10);
 
     // Créer l'utilisateur
-    let user;
-    if (role === 'médecin') {
-      user = await Medecin.create({
+    const utilisateur = await Utilisateur.create({
+      nom,
+      prenom,
+      email,
+      mot_de_passe: hashedPassword,
+      role,
+      date_de_naissance
+    });
+
+    // Créer soit un médecin, soit un patient
+    let userDetail;
+    if (role === 'Medecin') {
+      const serviceGeneral = await Service.findOne({ where: { nom: 'Médecine générale' } });
+      await Medecin.create({
+        id: utilisateur.id,
         nom,
         prenom,
         email,
         mot_de_passe: hashedPassword,
         role,
-        date_de_naissance
+        date_de_naissance,
+        ServiceId: serviceGeneral.id, // Associer le service de Médecine générale
+        grade: 'inconnu',
+        dernier_diplome : 'inconnu',
+        specialite : 'inconnu',
+      
       });
-    } else {
-      user = await Patient.create({
-        nom,
-        prenom,
-        email,
-        mot_de_passe: hashedPassword,
-        role,
-        date_de_naissance
+    } else if (role === 'Patient') {
+      userDetail = await Patient.create({
+        id: utilisateur.id, // Utiliser l'ID de l'utilisateur créé
+        numero_de_telephone
       });
     }
 
-    res.status(201).json(user);
+    res.status(201).json({ utilisateur, userDetail });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
+
+
+
+
+
 
 // Connexion
 app.post('/login', async (req, res) => {
@@ -143,5 +193,26 @@ app.post('/logout', async(req, res) => {
     res.json({ message: 'Déconnexion réussie' });
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+});
+
+
+
+
+app.post('/api/consultation', async (req, res) => {
+  const { date_heure, patient_id, medecin_id, description, rendez_vous_id, etat } = req.body;
+  
+  try {
+    const consultation = await Consultation.create({
+      date_heure,
+      patient_id,
+      medecin_id,
+      description,
+      rendez_vous_id,
+      etat
+    });
+    res.status(201).json(consultation);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
 });

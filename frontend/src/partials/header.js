@@ -1,6 +1,6 @@
-import React from "react";  
-
+import React, { useEffect, useState } from "react";  
 const TopNav = ()=>{
+    
     return (
         <div class="container-fluid bg-light p-0 wow fadeIn" data-wow-delay="0.1s">
         <div class="row gx-0 d-none d-lg-flex">
@@ -56,8 +56,15 @@ const NavBAr = ()=>{
                                 <a href="testimonial.html" class="dropdown-item">Deutsch</a>             
                             </div>
                         </div>
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Options</a>
+                            <div class="dropdown-menu rounded-0 rounded-bottom m-0">
+                                <a href="#" onClick={()=>{localStorage.removeItem("authToken"); window.location.href='/'}} class="dropdown-item">Déconnexion</a>
+                                           
+                            </div>
+                        </div>
                     </div>
-                    <a href="" class="btn btn-primary rounded-0 py-4 px-lg-5 d-none d-lg-block">Appointment<i class="fa fa-arrow-right ms-3"></i></a>
+                    <a href="" class="btn btn-primary rounded-0 py-4 px-lg-5 d-none d-lg-block">Commencer<i class="fa fa-arrow-right ms-3"></i></a>
                 </div>
             </nav>
     );
@@ -120,6 +127,17 @@ const BonttonNav = ()=>{
 
 
 const Header = ()=>{
+    const [loaded, setLoaded] = useState(false)
+    useEffect(()=>{
+        if (!loaded){
+            const authToken = localStorage.getItem('authToken');
+            if (authToken) {
+                setLoaded(true);
+            } else {
+                window.location.href = '/login';
+            }
+        }
+    })
     return(
         <>
             

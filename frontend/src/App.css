@@ -1,15 +1,18 @@
-
+  *{
+    font-size: 14pt;
+  }
         body{
         font-family: Arial, Helvetica, sans-serif;
         background-color: #e8fcc7bb;
         margin: auto ;
         padding: 0%;
+        
         }
-        .container{
+        /* .container{
             max-width: 800px;
             margin: auto;
             padding: 20px;
-        }
+        } */
 
         h1{
             color: #333333ce;

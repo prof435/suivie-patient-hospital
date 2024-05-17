@@ -41,29 +41,57 @@ app.listen(5000, () => {
 const verifyToken = async (req, res, next) => {
   try {
     const token = req.headers.authorization.split(' ')[1];
-    const decoded = jwt.verify(token, 'votre_cle_secrete');
-    req.user = await Utilisateur.findByPk(decoded.id);
+    if(!token){
+      return res.status(401).json({ message: 'Token d\'authentification non trouvé !!' });
+    }
+    const test  = jwt.verify(token, 'votre_cle_secrete');
+    console.info(test);
+    if(!test){
+      return res.status(402).json({ message: 'Token d\'authentification invalide ou expiré !!' });
+    }
+    const utilisateur = await Utilisateur.findByPk(test.userId);
+    req.user = utilisateur;
     next();
   } catch (err) {
-    return res.status(401).json({ error: 'Token d\'authentification invalide' });
+    if( err?.name  == 'TokenExpiredError'){
+      return res.status(403).json({ message: 'Token expiré' });
+    }else{
+    console.warn({err});
+    return res.status(401).json({ message: 'Token d\'authentification invalide' });
+    }
   }
 };
 
-router.post('/consultation', verifyToken, async (req, res) => {
+app.post('/consultation', verifyToken, async (req, res) => {
   try {
     const { title, description, service, dontKnow } = req.body;
-    const PatientId = req.user.id; // Assurez-vous que l'ID du patient est récupéré correctement
-
+    const patient = Patient.findOne({utilisateurId: req.user.id});
+    if (!patient) {
+      res.status(403).send({ message : 'Vous n\'avez pas acces à cette ressource (patient non trouvé)'})
+    }
     const consultation = await Consultation.create({
       date_heure: new Date(), // Utiliser la date et l'heure actuelles
       title,
       description,
-      PatientId
+      PatientId : patient.id
     });
 
     res.status(201).json(consultation);
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+});
+
+
+
+
+app.get('/services', verifyToken, async (req, res) => {
+  try {
+    const services = await Service.findAll();
+
+    res.status(201).json(services);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 });
 
@@ -152,7 +180,8 @@ app.post('/login', async (req, res) => {
 
     // Générer un token JWT
     const token = jwt.sign({ userId: user.id }, 'votre_cle_secrete', { expiresIn: '20h' });
-
+    user.update({date_heure_connexion: new Date()});
+    user.save();
     res.json({ token });
   } catch (err) {
     res.status(500).json({ error: err.message });

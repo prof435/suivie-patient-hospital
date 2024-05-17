@@ -130,6 +130,10 @@ const Consultation = sequelize.define('Consultation', {
     primaryKey: true,
     autoIncrement: true
   },
+  title:{
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
   date_heure: {
     type: DataTypes.DATE,
     allowNull: false
@@ -141,6 +145,15 @@ const Consultation = sequelize.define('Consultation', {
   etat: {
     type: DataTypes.BOOLEAN,
     defaultValue: false
+  }
+});
+
+
+const ConsultationService = sequelize.define('ConsultationService', {
+  id:{
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true
   }
 });
 
@@ -238,8 +251,11 @@ Rendez_vous.belongsTo(Patient);
 Medecin.belongsTo(Utilisateur);
 Patient.belongsTo(Utilisateur);
 
+ConsultationService.belongsTo(Service);
+ConsultationService.belongsTo(Consultation);
+
 // Synchronisation des modèles avec la base de données
-sequelize.sync()
+sequelize.sync( {alter:false} )
   .then(() => {
     console.log('Modèles synchronisés avec la base de données');
   })

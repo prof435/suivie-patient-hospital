@@ -10,8 +10,10 @@ const Chat = ()=>{
             <NavBAr />
 
             <div>
-
-            </div>
+fgvrvr m.v ;k, l m; `m;
+mm4`;
+m2
+  : ?: ;/2 b;/; bm;  m; b         </div>
             <Footer />
         </>
     );

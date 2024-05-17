@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";  
+import axios from 'axios';
+
+
 const TopNav = ()=>{
     
     return (
@@ -32,6 +35,37 @@ const TopNav = ()=>{
 };
 
 const NavBAr = ()=>{
+    const [loaded, setLoaded] = useState(false)
+    const [user, setUser] = useState(null);
+    
+    const getUser = async()=>{
+        setUser(null);
+        const authToken = localStorage.getItem('authToken');
+        await axios.get("http://localhost:5000/user", {
+            headers: {
+                'Authorization': `Bearer ${authToken}`
+              
+            }
+        }).then((res)=>{
+            if(res.status === 200){
+                setUser(res.data);
+            }
+            else{
+                alert("Une erreur s'est produite !!");
+            }
+        })
+    };
+    useEffect(()=>{
+        if (!loaded){
+            const authToken = localStorage.getItem('authToken');
+            if (authToken) {
+                getUser()
+                setLoaded(true);
+            } else {
+                window.location.href = '/login';
+            }
+        }
+    })
     return(
         <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top p-0 wow fadeIn" data-wow-delay="0.1s">
                 <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
@@ -43,7 +77,7 @@ const NavBAr = ()=>{
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <div class="navbar-nav ms-auto p-4 p-lg-0">
                         <a href="/Acceuil" class="nav-item nav-link"> Accueil</a>
-                        <a href="/consultation" class="nav-item nav-link">consultation</a>
+                        <a href="/consultation" class="nav-item nav-link">Consultation{user?.role === "Patient" ? "" : "s"}</a>
                         <a href="/rendezvous" class="nav-item nav-link">rendezvous</a>
                         <a href="/Docteur" class="nav-item nav-link"> Docteur</a>
                         <a href="/Actualite" class="nav-item nav-link"> Actualite</a>
@@ -57,21 +91,21 @@ const NavBAr = ()=>{
                             </div>
                         </div>
                         <div class="nav-item dropdown">
-                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Options</a>
+                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{user?.nom + user?.prenom}</a>
                             <div class="dropdown-menu rounded-0 rounded-bottom m-0">
+                                <a href="#" class="dropdown-item">Profile</a>
                                 <a href="#" onClick={()=>{localStorage.removeItem("authToken"); window.location.href='/'}} class="dropdown-item">Déconnexion</a>
                                            
                             </div>
                         </div>
                     </div>
-                    <a href="" class="btn btn-primary rounded-0 py-4 px-lg-5 d-none d-lg-block">Commencer<i class="fa fa-arrow-right ms-3"></i></a>
+                    <a href="/" class="btn btn-primary rounded-0 py-4 px-lg-5 d-none d-lg-block">Commencer<i class="fa fa-arrow-right ms-3"></i></a>
                 </div>
             </nav>
     );
 };
-
-
 const BonttonNav = ()=>{
+    
     return(
         <div class="container-fluid header bg-primary p-0 mb-5">
                 <div class="row g-0 align-items-center flex-column-reverse flex-lg-row">
@@ -127,23 +161,9 @@ const BonttonNav = ()=>{
 
 
 const Header = ()=>{
-    const [loaded, setLoaded] = useState(false)
-    useEffect(()=>{
-        if (!loaded){
-            const authToken = localStorage.getItem('authToken');
-            if (authToken) {
-                setLoaded(true);
-            } else {
-                window.location.href = '/login';
-            }
-        }
-    })
+    
     return(
         <>
-            
-        
-        
-            
            
             {/*<!-- Topbar End -->*/
         <TopNav />

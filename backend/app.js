@@ -14,7 +14,7 @@ app.use((req, res, next) => {
       url: req.originalUrl,
       status: res.statusCode,
       contentType: req.headers['content-type'],
-      date: new Date().toISOString()
+      date: new Date()
     };
     console.log(log);
   });
@@ -38,14 +38,13 @@ app.listen(5000, () => {
 
 
 // Middleware pour vérifier le token d'authentification
-const verifyToken = async (req, res, next) => {
+const   verifyToken = async (req, res, next) => {
   try {
     const token = req.headers.authorization.split(' ')[1];
     if(!token){
       return res.status(401).json({ message: 'Token d\'authentification non trouvé !!' });
     }
     const test  = jwt.verify(token, 'votre_cle_secrete');
-    console.info(test);
     if(!test){
       return res.status(402).json({ message: 'Token d\'authentification invalide ou expiré !!' });
     }
@@ -62,10 +61,40 @@ const verifyToken = async (req, res, next) => {
   }
 };
 
+
+//mise à jour
+app.post('/consultations/:consultationId/accept', verifyToken, async (req, res) => {
+  try {
+    if (req.user.role !== 'Medecin') {
+      return res.status(403).json({ message: 'Accès refusé. Non autorisé' });
+    }
+
+    const consultationId = req.params.consultationId;
+    const consultation = await Consultation.findByPk(consultationId);
+
+    if (!consultation) {
+      return res.status(404).json({ message: 'Consultation non trouvée' });
+    }
+    const medecin = await Medecin.findOne({UtilisateurId: req.user.id});  
+    if (!medecin) {
+      res.status(403).send({ message : 'Vous n\'avez pas acces à cette ressource (Medecin non trouvé)'})
+    }
+    consultation.etat = true; // Setting etat to true to mark it as accepted
+    consultation.MedecinId = medecin.id;
+    consultation.updatedAt = new Date();
+    await consultation.save();
+
+    res.status(200).json({ message: 'Consultation acceptée avec succès', consultation });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+//Creation 
 app.post('/consultation', verifyToken, async (req, res) => {
   try {
     const { title, description, service, dontKnow } = req.body;
-    const patient = Patient.findOne({utilisateurId: req.user.id});
+    const patient = await Patient.findOne({UtilisateurId: req.user.id});  
     if (!patient) {
       res.status(403).send({ message : 'Vous n\'avez pas acces à cette ressource (patient non trouvé)'})
     }
@@ -73,7 +102,8 @@ app.post('/consultation', verifyToken, async (req, res) => {
       date_heure: new Date(), // Utiliser la date et l'heure actuelles
       title,
       description,
-      PatientId : patient.id
+      PatientId : patient.id,
+      ServiceId: service    
     });
 
     res.status(201).json(consultation);
@@ -84,12 +114,46 @@ app.post('/consultation', verifyToken, async (req, res) => {
 
 
 
+//liste
+app.get('/consultations', verifyToken, async (req, res) => {
+  try {
+    if (req.user.role !== 'Medecin') {
+      return res.status(403).json({ message: 'Accès refusé. Non autorisé' });
+    }
+
+    const medecin = await Medecin.findOne({UtilisateurId: req.user.id});  
+    if (!medecin) {
+      res.status(403).send({ message : 'Vous n\'avez pas acces à cette ressource (Medecin non trouvé)'})
+    }
+    const consultations = await Consultation.findAll({
+      where: { ServiceId: medecin.ServiceId },
+      order: [['date_heure', 'DESC']]
+    });
+    res.json(consultations);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
+
+
 
 app.get('/services', verifyToken, async (req, res) => {
   try {
     const services = await Service.findAll();
 
     res.status(201).json(services);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+
+app.get('/user', verifyToken, (req, res) => {
+  try {
+    const user =  req.user;
+    res.status(200).json(user);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -130,7 +194,7 @@ app.post('/register', async (req, res) => {
     if (role === 'Medecin') {
       const serviceGeneral = await Service.findOne({ where: { nom: 'Médecine générale' } });
       await Medecin.create({
-        id: utilisateur.id,
+        UtilisateurId: utilisateur.id,
         nom,
         prenom,
         email,
@@ -145,7 +209,7 @@ app.post('/register', async (req, res) => {
       });
     } else if (role === 'Patient') {
       userDetail = await Patient.create({
-        id: utilisateur.id, // Utiliser l'ID de l'utilisateur créé
+        UtilisateurId: utilisateur.id, // Utiliser l'ID de l'utilisateur créé
         numero_de_telephone
       });
     }
@@ -180,8 +244,10 @@ app.post('/login', async (req, res) => {
 
     // Générer un token JWT
     const token = jwt.sign({ userId: user.id }, 'votre_cle_secrete', { expiresIn: '20h' });
-    user.update({date_heure_connexion: new Date()});
-    user.save();
+    user.date_heure_connexion = new Date();
+    user.updatedAt = new Date();
+    await user.save();
+   
     res.json({ token });
   } catch (err) {
     res.status(500).json({ error: err.message });

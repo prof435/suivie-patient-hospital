@@ -149,13 +149,6 @@ const Consultation = sequelize.define('Consultation', {
 });
 
 
-const ConsultationService = sequelize.define('ConsultationService', {
-  id:{
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
-    primaryKey: true
-  }
-});
 
 // Modèle Rapport de Consultation
 const RapportConsultation = sequelize.define('RapportConsultation', {
@@ -251,16 +244,15 @@ Rendez_vous.belongsTo(Patient);
 Medecin.belongsTo(Utilisateur);
 Patient.belongsTo(Utilisateur);
 
-ConsultationService.belongsTo(Service);
-ConsultationService.belongsTo(Consultation);
+Consultation.belongsTo(Service);
 
 // Synchronisation des modèles avec la base de données
-sequelize.sync( {alter:false} )
-  .then(() => {
-    console.log('Modèles synchronisés avec la base de données');
-  })
-  .catch((err) => {
-    console.error('Erreur lors de la synchronisation des modèles:', err);
-  });
+// sequelize.sync( {alter:false} )
+//   .then(() => {
+//     console.log('Modèles synchronisés avec la base de données');
+//   })
+//   .catch((err) => {
+//     console.error('Erreur lors de la synchronisation des modèles:', err);
+//   });
 
 module.exports =  {sequelize, Utilisateur, Medecin, Patient, Service, ChatRoom, Consultation, Rendez_vous, RapportConsultation, Message, DossierMedical}

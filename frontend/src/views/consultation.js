@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { Card, Button, Container, Alert } from 'react-bootstrap';
 import Header from '../partials/header';
-import Footer from '../partials/footer'; // fichier CSS pour le style
-
+import Footer from '../partials/footer';
 import axios from 'axios';
 
 const Consultation = () => {
@@ -15,6 +15,28 @@ const Consultation = () => {
   });
 
   const [alert, setAlert] = useState({ show: false, message: '', variant: '' });  
+  const [consultations, setConsultations] = useState([]);
+  const [expandedConsultation, setExpandedConsultation] = useState(null);
+
+  const [user, setUser] = useState(null);
+    
+    const getUser = async()=>{
+        setUser(null);
+        const authToken = localStorage.getItem('authToken');
+        await axios.get("http://localhost:5000/user", {
+            headers: {
+                'Authorization': `Bearer ${authToken}`
+              
+            }
+        }).then((res)=>{
+            if(res.status === 200){
+                setUser(res.data);
+            }
+            else{
+                alert("Une erreur s'est produite !!");
+            }
+        })
+    }
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -76,8 +98,9 @@ const Consultation = () => {
       message: '',
       variant: 'success'
     });
-    const token = localStorage.getItem('authToken')
-    const data = {...formData, token: token};
+    const token = localStorage.getItem('authToken');
+    const medGeneral = services.filter((service) => service.nom === "Médecine générale");
+    const data = {...formData, token: token, service: formData.dontKnow ? [...medGeneral][0].id : formData.service };
     try {
       const response = await axios.post('http://localhost:5000/consultation', data, {
         headers: {
@@ -100,16 +123,59 @@ const Consultation = () => {
     }
   };
 
+  const handleAccept = async (consultationId) => {
+    try {
+      const authToken = localStorage.getItem('authToken');
+      await axios.post(`http://localhost:5000/consultations/${consultationId}/accept`, {}, {
+        headers: { Authorization: `Bearer ${authToken}` }
+      });
+      setAlert({ show: true, message: 'Consultation acceptée avec succès!', variant: 'success' });
+    } catch (error) {
+      console.error('Erreur lors de l\'acceptation de la consultation :', error);
+      setAlert({ show: true, message: 'Erreur lors de l\'acceptation de la consultation.', variant: 'danger' });
+    }
+  };
+
+  const handleExpand = (consultationId) => {
+    setExpandedConsultation(expandedConsultation === consultationId ? null : consultationId);
+  };
+
+
   useEffect(()=>{
     if(!loaded){
       getServices();
-      setLoaded(true);
+        const authToken = localStorage.getItem('authToken');
+        if (authToken) {
+            getUser()
+            setLoaded(true);
+            const fetchConsultations = async () => {
+              try {
+                const authToken = localStorage.getItem('authToken');
+                const response = await axios.get('http://localhost:5000/consultations', {
+                  headers: { Authorization: `Bearer ${authToken}` }
+                });
+                setConsultations(response.data);
+              } catch (error) {
+                console.error('Erreur lors de la récupération des consultations :', error);
+              }
+            };
+        
+            fetchConsultations();
+        } else {
+            window.location.href = '/login';
+          }
     }
-  }, [services]);
+  }, [services,consultations]);
+
+    
+
 
   return (
     <>
       <Header />
+      {user?.role === "Patient"? (
+
+      
           <div className="container mt-5">
           {alert.show && (
             <div className={`alert alert-${alert.variant}`} role="alert">
@@ -183,6 +249,37 @@ const Consultation = () => {
             </div>
           </div>
         </div>
+        
+      ):
+      (
+        <Container className="mt-4">
+        <h1 className="text-center mb-4">Liste des Consultations</h1>
+        {alert.show && (
+          <Alert variant={alert.variant} onClose={() => setAlert({ show: false })} dismissible>
+            {alert.message}
+          </Alert>
+        )}
+        {consultations.map((consultation, index) => (
+          <Card className={`mb-4 ${index % 2 === 0 ? 'bg-light' : ' text-white'}`} key={consultation.id}>
+            <Card.Header className="d-flex justify-content-between align-items-center">
+              <h5>{consultation.title}</h5>
+              <Button variant="success" onClick={() => handleAccept(consultation.id)}>Accepter</Button>
+            </Card.Header>
+            <Card.Body>
+              <p>
+                {expandedConsultation === consultation.id
+                  ? consultation.description
+                  : `${consultation.description.substring(0, 100)}...`}
+              </p>
+              <Button variant="link" onClick={() => handleExpand(consultation.id)}>
+                {expandedConsultation === consultation.id ? 'Voir moins' : 'Voir plus'}
+              </Button>
+            </Card.Body>
+          </Card>
+        ))}
+      </Container>
+      )  
+        }
       <Footer />
     </>
   );

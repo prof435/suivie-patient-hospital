@@ -44,39 +44,34 @@ const Docteur = () => {
   return (
     <>
       <Header />
-      <div className="Docteur" style={{ backgroundImage: "url('chemin_vers_votre_image')" }}>
+      {/* <div className="Docteur" style={{ backgroundImage: "url('chemin_vers_votre_image')" }}>
         <div className="container">
           <h1 className="titre">Prenez un rendez-vous</h1>
 
           <div className="calendrier">
             <h2>Calendrier des rendez-vous</h2>
-            {/* Afficher le calendrier des rendez-vous ici */}
             <Calendar onDateSelect={handleDateSelect} />
           </div>
 
           <div className="selection-medecin">
             <h2>Sélection du médecin</h2>
-            {/* Afficher la liste des médecins avec leurs informations ici */}
             <DoctorList doctors={doctors} onDoctorSelect={handleDoctorSelect} />
           </div>
 
           <div className="formulaire-rendezvous">
             <h2>Formulaire de rendez-vous</h2>
-            {/* Afficher le formulaire de rendez-vous ici */}
             <AppointmentForm onSubmit={handleFormSubmit} />
           </div>
 
           {confirmation && (
             <div className="confirmation-rendezvous">
               <h2>Confirmation du rendez-vous</h2>
-              {/* Afficher la section de confirmation du rendez-vous ici */}
               <AppointmentConfirmation details={appointmentDetails} />
             </div>
           )}
 
           <div className="messages-notifications">
             <h2>Messages et notifications</h2>
-            {/* Afficher les messages et les notifications liés aux rendez-vous ici */}
             <AppointmentMessages />
           </div>
 
@@ -84,7 +79,7 @@ const Docteur = () => {
             Retour à l'accueil
           </button>
         </div>
-      </div>
+      </div> */}
       <Footer />
     </>
   );

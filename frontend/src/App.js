@@ -10,6 +10,9 @@ import Docteur from './views/Docteur';
 import MedHome from './views/medecinHome';
 import Chat from './views/chat';
 import PageNotFound from './views/PageNotFound';
+import RapportMedical from './views/rapportmedical';
+import conseils from './views/conseils';
+import PayementPage from './views/payementpage';
 //import Actualite from './views/actualite';
 
 function App() {
@@ -27,6 +30,9 @@ function App() {
   {/*       <Route path="/Actualite" element={<Actualite />} />*/}
         <Route path="/Docteur" element={<Docteur />} />
         <Route path="/Chat" element={<Chat />} />
+        <Route path="/rapportmedical" element={<RapportMedical />} />
+        <Route path="/conseils" element={<Conseils />} />
+        <Route path="/payementpage " element={<PayementPage />} />
         {/* <Route path='*' element={<PageNotFound />} /> */}
 
       </Routes>

@@ -1,11 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import Header from '../partials/header';
+//import { TopNav} from '../partials/header';
+import { NavBAr ,TopNav } from '../partials/header';
+
 import Footer from '../partials/footer';
 
 const Accueil = ()=>{
     return (
         <>
-        <Header/>
+       <NavBAr/>
+       <TopNav/>
             <div class="container-xxl py-5">
                 <div class="container">
                     <div class="row g-5">

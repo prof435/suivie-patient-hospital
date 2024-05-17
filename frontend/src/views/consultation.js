@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { Link } from 'react-router-dom';
 import MedecinGeneraliste from './MedecinGeneraliste';
 import Header from '../partials/header';
@@ -105,7 +105,7 @@ const Consultation = () => {
           {/* Fournissez ici des ressources éducatives pertinentes */}
         </div>
       </div>
-    </div>
+  
       <Footer />
     </>
   );

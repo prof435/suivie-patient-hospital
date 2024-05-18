@@ -50,6 +50,9 @@ const   verifyToken = async (req, res, next) => {
     }
     const utilisateur = await Utilisateur.findByPk(test.userId);
     req.user = utilisateur;
+    utilisateur.date_heure_connexion = Date.now();
+    utilisateur.updatedAt = Date.now();
+    await utilisateur.save();
     next();
   } catch (err) {
     if( err?.name  == 'TokenExpiredError'){
@@ -60,6 +63,50 @@ const   verifyToken = async (req, res, next) => {
     }
   }
 };
+
+
+
+
+//enregistrer un message
+app.post('/chatrooms/:chatroomId/messages', verifyToken, async (req, res) => {
+  try {
+    const { chatroomId } = req.params;
+    const { contenu } = req.body;
+
+    const chatroom = await ChatRoom.findByPk(chatroomId);
+    if (!chatroom) {
+      return res.status(404).json({ message: 'Chatroom non trouvé' });
+    }
+
+    const message = await Message.create({
+      ChatRoomId: chatroomId,
+      contenu,
+      UtilisateurId: req.user.id,
+      date_envoi:  new Date().
+    });
+
+    chatroom.updatedAt =  Date.now();
+    await chatroom.save();
+
+    res.status(201).json(message);
+  } catch (err) {
+    console.warn({ err });
+    res.status(500).json({ message: 'Erreur lors de la création du message', error: err.message });
+  }
+});
+
+
+
+app.get('/chatrooms/:chatRoomId', verifyToken, async (req, res) => {
+  try {
+    const chats =  await Message.findAll({where:{chatRoomId:req.params.chatRoomId}});
+    res.status(200).json(chats);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+
 
 
 //liste
@@ -169,7 +216,7 @@ app.post('/consultations/:consultationId/accept', verifyToken, async (req, res) 
     if (chatroom) {
       await Message.create({ChatRoomId: chatroom.id, contenu:consultation.title , UtilisateurId: patient.UtilisateurId, date_envoi: consultation.createdAt});
       await Message.create({ChatRoomId: chatroom.id, contenu:consultation.description, UtilisateurId: patient.UtilisateurId, date_envoi: consultation.createdAt});
-      await Message.create({ChatRoomId: chatroom.id, contenu:"Merci je vous prends en charge.", UtilisateurId: medecin.UtilisateurId, date_envoi: Date.now()});
+      await Message.create({ChatRoomId: chatroom.id, contenu:"Merci je vous prends en charge.", UtilisateurId: medecin.UtilisateurId, date_envoi: new Date().toISOString()});
     }
 
     return res.status(200).json({ message: 'Consultation acceptée avec succès', consultation });

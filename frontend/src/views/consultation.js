@@ -25,8 +25,8 @@ const Consultation = () => {
         const authToken = localStorage.getItem('authToken');
         await axios.get("http://localhost:5000/user", {
             headers: {
-                'Authorization': `Bearer ${authToken}`
-              
+                'Authorization': `Bearer ${authToken}`,
+            'Content-Type' : 'application/json'
             }
         }).then((res)=>{
             if(res.status === 200){
@@ -102,10 +102,10 @@ const Consultation = () => {
     const medGeneral = services.filter((service) => service.nom === "Médecine générale");
     const data = {...formData, token: token, service: formData.dontKnow ? [...medGeneral][0].id : formData.service };
     try {
-      const response = await axios.post('http://localhost:5000/consultation', data, {
+       await axios.post('http://localhost:5000/consultation', data, {
         headers: {
-          'Authorization': `Bearer ${token}`
-        
+          'Authorization': `Bearer ${token}`,
+          'Content-Type' : 'application/json'        
       }});
       
       setAlert({
@@ -127,7 +127,8 @@ const Consultation = () => {
     try {
       const authToken = localStorage.getItem('authToken');
       await axios.post(`http://localhost:5000/consultations/${consultationId}/accept`, {}, {
-        headers: { Authorization: `Bearer ${authToken}` }
+        headers: { Authorization: `Bearer ${authToken}`,
+        'Content-Type' : 'application/json' }
       });
       setAlert({ show: true, message: 'Consultation acceptée avec succès!', variant: 'success' });
       setTimeout(() => {
@@ -155,7 +156,8 @@ const Consultation = () => {
               try {
                 const authToken = localStorage.getItem('authToken');
                 const response = await axios.get('http://localhost:5000/consultations', {
-                  headers: { Authorization: `Bearer ${authToken}` }
+                  headers: { Authorization: `Bearer ${authToken}`,
+                  'Content-Type' : 'application/json' }
                 });
                 setConsultations(response.data);
               } catch (error) {
@@ -168,7 +170,7 @@ const Consultation = () => {
             window.location.href = '/login';
           }
     }
-  }, [services,consultations]);
+  }, [services,consultations, getUser, loaded]);
 
     
 

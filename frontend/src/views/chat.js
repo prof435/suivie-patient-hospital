@@ -4,6 +4,7 @@ import { NavBAr, TopNav } from "../partials/header";
 import Footer from "../partials/footer";
 import axios from "axios";
 import './chat.css';
+import ChatSpace from "./chatSpace";
 
 const ChatRoom = ()=>{
 
@@ -11,6 +12,7 @@ const ChatRoom = ()=>{
     const [loaded, setLoaded] = useState(null);
     const [alert, setAlert] = useState({message:'', show:false, variant:'info'});
     const [user, setUser] = useState(null);
+    const [selectetChat, setSelectetChat] = useState(null);
 
 
     const getUser = async()=>{
@@ -18,7 +20,8 @@ const ChatRoom = ()=>{
         const authToken = localStorage.getItem('authToken');
         await axios.get("http://localhost:5000/user", {
             headers: {
-                'Authorization': `Bearer ${authToken}`
+                'Authorization': `Bearer ${authToken}`,
+                'Content-Type' : 'application/json'
               
             }
         }).then((res)=>{
@@ -35,7 +38,8 @@ const ChatRoom = ()=>{
         const authToken = localStorage.getItem('authToken');
         await axios.get("http://localhost:5000/chatrooms", {
             headers: {
-                'Authorization': `Bearer ${authToken}`
+                'Authorization': `Bearer ${authToken}`,
+                'Content-Type' : 'application/json'
             }
         })
        .then((response)=>{
@@ -565,8 +569,8 @@ const ChatRoom = ()=>{
                                
 
                                 <div class="list-group lg-alt">
-                                    {chatrooms?.map((chatroom, index)=>(
-                                        <a class="list-group-item media" href="">
+                                    {chatrooms?.map((chatroom)=>(
+                                        <a key={chatroom?.id} class="list-group-item media" href="#" onClick={()=>setSelectetChat(chatroom)}>
                                         <div class="pull-left">
                                             <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="" class="img-avatar" />
                                         </div>
@@ -584,71 +588,7 @@ const ChatRoom = ()=>{
 
                             </div>
 
-                            <div class="ms-body">
-                                <div class="action-header clearfix">
-                                   
-
-                                    <div class="pull-left hidden-xs">
-                                        <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="" class="img-avatar m-r-10" />
-                                        <div class="lv-avatar pull-left">
-
-                                        </div>
-                                        <span>David Parbell</span>
-                                    </div>
-
-                                    <ul class="ah-actions actions">
-                                        <li>
-                                            <a href="" title="Supprimer la conversation">
-                                                <i class="fa fa-trash"></i>
-                                            </a>
-                                        </li>
-                                        
-                                    </ul>
-                                </div>
-
-                                <div class="message-feed media">
-                                    <div class="pull-left">
-                                        <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" class="img-avatar" />
-                                    </div>
-                                    <div class="media-body">
-                                        <div class="mf-content">
-                                            Quisque consequat arcu eget odio cursus, ut tempor arcu vestibulum. Etiam ex arcu, porta a urna non, lacinia pellentesque orci. Proin semper sagittis erat, eget condimentum sapien viverra et. Mauris volutpat magna nibh, et condimentum est rutrum a. Nunc sed turpis mi. In eu massa a sem pulvinar lobortis.
-                                        </div>
-                                        <small class="mf-date"><i class="fa fa-clock-o"></i> 20/02/2015 at 09:00</small>
-                                    </div>
-                                </div>
-
-                                <div class="message-feed right">
-                                    <div class="pull-right">
-                                        <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="" class="img-avatar" />
-                                    </div>
-                                    <div class="media-body">
-                                        <div class="mf-content">
-                                            Mauris volutpat magna nibh, et condimentum est rutrum a. Nunc sed turpis mi. In eu massa a sem pulvinar lobortis.
-                                        </div>
-                                        <small class="mf-date"><i class="fa fa-clock-o"></i> 20/02/2015 at 09:30</small>
-                                    </div>
-                                </div>
-
-                                <div class="message-feed media">
-                                    <div class="pull-left">
-                                        <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" class="img-avatar" />
-                                    </div>
-                                    <div class="media-body">
-                                        <div class="mf-content">
-                                            Etiam ex arcumentum
-                                        </div>
-                                        <small class="mf-date"><i class="fa fa-clock-o"></i> 20/02/2015 at 09:33</small>
-                                    </div>
-                                </div>
-
-                                
-
-                                <div class="msb-reply">
-                                    <textarea placeholder="What's on your mind..."></textarea>
-                                    <button><i class="fa fa-paper-plane-o"></i></button>
-                                </div>
-                            </div>
+                            <ChatSpace chatroom={selectetChat} />
                         </div>
                     </div>
                 <Footer />

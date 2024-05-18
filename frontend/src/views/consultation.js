@@ -102,11 +102,11 @@ const Consultation = () => {
     const medGeneral = services.filter((service) => service.nom === "Médecine générale");
     const data = {...formData, token: token, service: formData.dontKnow ? [...medGeneral][0].id : formData.service };
     try {
-       await axios.post('http://localhost:5000/consultation', data, {
+      await axios.post('http://localhost:5000/consultation', data, {
         headers: {
           'Authorization': `Bearer ${token}`,
-          'Content-Type' : 'application/json'        
-      }});
+          'Content-Type': 'application/json'
+        }});
       
       setAlert({
         show: true,

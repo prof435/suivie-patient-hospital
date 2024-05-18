@@ -50,8 +50,8 @@ const   verifyToken = async (req, res, next) => {
     }
     const utilisateur = await Utilisateur.findByPk(test.userId);
     req.user = utilisateur;
-    utilisateur.date_heure_connexion = Date.now();
-    utilisateur.updatedAt = Date.now();
+    utilisateur.date_heure_connexion = new Date().toISOString().replace(/T/g, ' ').replace(/\..+$/, '');
+    utilisateur.updatedAt = new Date().toISOString().replace(/T/g, ' ').replace(/\..+$/, '');
     await utilisateur.save();
     next();
   } catch (err) {
@@ -82,7 +82,7 @@ app.post('/chatrooms/:chatroomId/messages', verifyToken, async (req, res) => {
       ChatRoomId: chatroomId,
       contenu,
       UtilisateurId: req.user.id,
-      date_envoi:  new Date().
+      date_envoi:  new Date().toISOString().replace(/T/g, ' ').replace(/\..+$/, '')
     });
 
     chatroom.updatedAt =  Date.now();
@@ -99,7 +99,7 @@ app.post('/chatrooms/:chatroomId/messages', verifyToken, async (req, res) => {
 
 app.get('/chatrooms/:chatRoomId', verifyToken, async (req, res) => {
   try {
-    const chats =  await Message.findAll({where:{chatRoomId:req.params.chatRoomId}});
+    const chats =  await Message.findAll({where:{chatRoomId:req.params.chatRoomId}, order:['date_envoi', 'DESC']});
     res.status(200).json(chats);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -123,19 +123,19 @@ app.get('/chatrooms', verifyToken, async (req, res) => {
           {
             model: Message,
             as: 'Messages',
-            attributes: ['id', 'content', 'createdAt'],
+            attributes: ['id', 'contenu', 'createdAt', 'date_envoi'],
             limit: 1,
-            order: [['createdAt', 'DESC']],
+            order: [['date_envoi', 'DESC']],
           },
           {
             model: Medecin,
-            as: 'Medecins',
+            as: 'Medecin',
             attributes: ['id'],
             include:[
               {
                 model: Utilisateur,
                 attributes: ['id', 'nom', 'prenom', 'email', 'role'],
-                as: 'Utilisateurs'
+                as: 'Utilisateur'
               }
             ]
           },
@@ -151,9 +151,9 @@ app.get('/chatrooms', verifyToken, async (req, res) => {
           {
             model: Message,
             as: 'Messages',
-            attributes: ['id', 'contenu', 'createdAt', 'UtilisateurId'],
+            attributes: ['id', 'contenu', 'createdAt', 'UtilisateurId', 'date_envoi'],
             limit: 1,
-            order: [['createdAt', 'DESC']],
+            order: [['date_envoi', 'DESC']],
           },
           {
             model: Patient,
@@ -200,7 +200,7 @@ app.post('/consultations/:consultationId/accept', verifyToken, async (req, res) 
     }
     consultation.etat = true; // Setting etat to true to mark it as accepted
     consultation.MedecinId = medecin.id;
-    consultation.updatedAt = new Date();
+    consultation.updatedAt = new Date().toISOString().replace(/T/g, ' ').replace(/\..+$/, '');
     await consultation.save();
     const patient = await  Patient.findByPk(consultation.PatientId);
     const [chatroom, create] = await ChatRoom.findOrCreate({
@@ -235,7 +235,7 @@ app.post('/consultation', verifyToken, async (req, res) => {
       return res.status(403).send({ message : 'Vous n\'avez pas acces à cette ressource (patient non trouvé)'})
     }
     const consultation = await Consultation.create({
-      date_heure: new Date(), // Utiliser la date et l'heure actuelles
+      date_heure: new Date().toISOString().replace(/T/g, ' ').replace(/\..+$/, ''),
       title,
       description,
       PatientId : patient.id,
@@ -244,7 +244,7 @@ app.post('/consultation', verifyToken, async (req, res) => {
 
     return res.status(201).json(consultation);
   } catch (error) {
-    return es.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 });
 
@@ -304,7 +304,7 @@ app.get('/user', verifyToken, (req, res) => {
 // Création de compte utilisateur
 app.post('/register', async (req, res) => {
   try {
-    const { nom, prenom, email, mot_de_passe, role, date_de_naissance, numero_de_telephone } = req.body;
+    const { nom, prenom, email, mot_de_passe, role, date_de_naissance, numero_de_telephone } = req.body.data;
 
     // Vérifier si l'email existe déjà
     const existingUser = await Utilisateur.findOne({ where: { email } });
@@ -364,7 +364,8 @@ app.post('/register', async (req, res) => {
 // Connexion
 app.post('/login', async (req, res) => {
   try {
-    const { email, mot_de_passe } = req.body;
+    console.log(req.body);
+    const { email, mot_de_passe } = req.body.data;
 
     // Trouver l'utilisateur par email
     const user = await Utilisateur.findOne({ where: { email } });
@@ -380,8 +381,8 @@ app.post('/login', async (req, res) => {
 
     // Générer un token JWT
     const token = jwt.sign({ userId: user.id }, 'votre_cle_secrete', { expiresIn: '20h' });
-    user.date_heure_connexion = new Date();
-    user.updatedAt = new Date();
+    user.date_heure_connexion = new Date().toISOString().replace(/T/g, ' ').replace(/\..+$/, '');
+    user.updatedAt = new Date().toISOString().replace(/T/g, ' ').replace(/\..+$/, '');
     await user.save();
    
     res.json({ token });
@@ -397,7 +398,7 @@ app.post('/login', async (req, res) => {
 // Mise à jour des informations utilisateur
 app.put('/users/:id', verifyToken, async (req, res) => {
   try {
-    const { nom, prenom, email, mot_de_passe, date_de_naissance } = req.body;
+    const { nom, prenom, email, mot_de_passe, date_de_naissance } = req.body.data;
 
     // Vérifier que l'utilisateur demandé correspond à l'utilisateur authentifié
     if (req.user.id !== parseInt(req.params.id)) {
@@ -427,7 +428,7 @@ app.put('/users/:id', verifyToken, async (req, res) => {
 
 
 // Endpoint de déconnexion
-app.post('/logout', async(req, res) => {
+app.post('/logout',verifyToken,  async(req, res) => {
   try {
     // Récupérer le token d'authentification depuis l'en-tête Authorization
     const token = req.headers.authorization.split(' ')[1];

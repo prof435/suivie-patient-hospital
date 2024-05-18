@@ -9,6 +9,7 @@ const ChatSpace = ({chatroom})=>{
     const [message, setMessage] = useState(null);
     const [alert, setAlert] = useState({message:'', show:false, content:'', variant:'info'});
     const [user, setUser] = useState(null);
+    const [ten, setTen] = useState({num: 0 , pending: false});
 
 
     const getUser = async()=>{
@@ -53,6 +54,9 @@ const ChatSpace = ({chatroom})=>{
     };
 
     const getChats = async function(chatroomId){
+        if(!chatroomId){
+            return;
+        }
         try {
         const authToken = localStorage.getItem('authToken');
         const response = await axios.get(`http://localhost:5000/chatrooms/${chatroomId}`, {headers: {
@@ -73,8 +77,8 @@ const ChatSpace = ({chatroom})=>{
     const authToken = localStorage.getItem('authToken');
     try {
       await axios.post(
-        `http://localhost:5000/chatrooms/${chatroom?.id}/messages`,
-        { contenu: message },
+        `http://localhost:5000/chatrooms/${chatroom?.id}/messages`,     { contenu: message },
+        
         {
           headers: {
             Authorization: `Bearer ${authToken}`,
@@ -105,7 +109,15 @@ const ChatSpace = ({chatroom})=>{
     }
   };
 
-
+  const test = ()=>{
+    if(ten.num <10){
+        return;
+    }else if(ten.pending === false){
+        setTimeout(() => {
+            setTen({num: 11, pending: true});
+        }, 2000);
+    }
+  }
     useEffect(()=>{
         if(!loaded){
             const token = localStorage.getItem('authToken');
@@ -118,9 +130,11 @@ const ChatSpace = ({chatroom})=>{
             }
         }
         else{
-            setTimeout(() => {
-                getChats(chatroom?.id)
-            }, 10000);
+            // if(ten?.pending){
+            //     getChats(chatroom?.id);
+            //     setTen({num: 0, pending: false});
+            //     test();
+            // }
         }
     });
     return(
@@ -191,7 +205,7 @@ const ChatSpace = ({chatroom})=>{
                                                     <div class="mf-content">
                                                         {chat?.contenu}
                                                     </div>
-                                                    <small class="mf-date"><i class="fa fa-clock-o"></i> {chat?.datecreatedAt_envoi}</small>
+                                                    <small class="mf-date"><i class="fa fa-clock-o"></i> {chat?.date_envoi}</small>
                                                 </div>
                                             </div>
                                         ) : (
@@ -204,7 +218,7 @@ const ChatSpace = ({chatroom})=>{
                                                     <div class="mf-content">
                                                         {chat?.contenu}
                                                     </div>
-                                                    <small class="mf-date"><i class="fa fa-clock-o"></i> {chat?.createdAt}</small>
+                                                    <small class="mf-date"><i class="fa fa-clock-o"></i> {chat?.date_envoi}</small>
                                                 </div>
                                             </div>
                                         )}

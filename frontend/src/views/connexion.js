@@ -18,8 +18,8 @@ const Connexion = () => {
     event.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:5000/login',{headers:{
-      'Content-Type' : 'application/json'}}, { email, mot_de_passe: password });
+      const response = await axios.post('http://localhost:5000/login',{ headers:{
+      'Content-Type' : 'application/json'}, data:{ email:email,  mot_de_passe: password }});
       const { token } = response.data;
 
       // Stocker le token dans le stockage local ou dans un cookie

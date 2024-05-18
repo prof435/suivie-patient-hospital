@@ -34,7 +34,7 @@ const Inscription = () => {
 
     try {
       const response = await axios.post('http://localhost:5000/register', {headers:{
-      'Content-Type' : 'application/json'}}, {
+      'Content-Type' : 'application/json'}, data:{
         nom,
         prenom,
         email,
@@ -42,7 +42,7 @@ const Inscription = () => {
         role: typeCompte,
         numero_de_telephone: numero_de_telephone,
         date_de_naissance: '1990-01-01' // Vous devrez remplacer cette valeur par la date de naissance de l'utilisateur
-      });
+      }});
 
       setMessage({ type: 'success', content: 'Utilisateur créé avec succès!' });
       console.log('Utilisateur créé :', response.data);

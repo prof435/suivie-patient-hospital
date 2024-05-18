@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Button, Container, Alert } from 'react-bootstrap';
-import Header from '../partials/header';
+import { Card, Button, Container, Alert,  } from 'react-bootstrap';
 import Footer from '../partials/footer';
 import axios from 'axios';
+import { NavBAr } from '../partials/header';
 
 const Consultation = () => {
   const [services, setServices] = useState('');
@@ -130,6 +130,9 @@ const Consultation = () => {
         headers: { Authorization: `Bearer ${authToken}` }
       });
       setAlert({ show: true, message: 'Consultation acceptée avec succès!', variant: 'success' });
+      setTimeout(() => {
+        window.location.href = '/chat';
+      }, 2000);
     } catch (error) {
       console.error('Erreur lors de l\'acceptation de la consultation :', error);
       setAlert({ show: true, message: 'Erreur lors de l\'acceptation de la consultation.', variant: 'danger' });
@@ -172,7 +175,7 @@ const Consultation = () => {
 
   return (
     <>
-      <Header />
+      <NavBAr />
       {user?.role === "Patient"? (
 
       

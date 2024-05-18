@@ -203,6 +203,16 @@ const Message = sequelize.define('Message', {
   date_envoi: {
     type: DataTypes.DATE,
     allowNull: false
+  }, 
+  recu: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
+  }, 
+  lu:{
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
   }
 });
 
@@ -226,10 +236,10 @@ Patient.hasOne(DossierMedical);
 DossierMedical.belongsTo(Patient);
 
 Medecin.hasMany(ChatRoom);
-Medecin.belongsTo(ChatRoom);
+ChatRoom.belongsTo(Medecin);
 
-Medecin.belongsTo(ChatRoom);
 Patient.hasMany(ChatRoom);
+ChatRoom.belongsTo(Patient);
 
 
 ChatRoom.hasMany(Message);

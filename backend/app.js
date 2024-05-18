@@ -62,6 +62,78 @@ const   verifyToken = async (req, res, next) => {
 };
 
 
+//liste
+app.get('/chatrooms', verifyToken, async (req, res) => {
+  try {
+    const user = req.user;
+
+    if (user.role !== 'Medecin') {
+      const patient = await Patient.findOne({ where: { UtilisateurId: user.id } });
+      const chatrooms = await ChatRoom.findAll({
+        where: { PatientId: patient.id },
+        order: [['updatedAt', 'DESC']],
+        include: [
+          {
+            model: Message,
+            as: 'Messages',
+            attributes: ['id', 'content', 'createdAt'],
+            limit: 1,
+            order: [['createdAt', 'DESC']],
+          },
+          {
+            model: Medecin,
+            as: 'Medecins',
+            attributes: ['id'],
+            include:[
+              {
+                model: Utilisateur,
+                attributes: ['id', 'nom', 'prenom', 'email', 'role'],
+                as: 'Utilisateurs'
+              }
+            ]
+          },
+        ],
+      });
+      return res.json(chatrooms);
+    } else {
+      const medecin = await Medecin.findOne({ where: { UtilisateurId: user.id } });
+      const chatrooms = await ChatRoom.findAll({
+        where: { MedecinId: medecin.id },
+        order: [['updatedAt', 'DESC']],
+        include: [
+          {
+            model: Message,
+            as: 'Messages',
+            attributes: ['id', 'contenu', 'createdAt', 'UtilisateurId'],
+            limit: 1,
+            order: [['createdAt', 'DESC']],
+          },
+          {
+            model: Patient,
+            as: 'Patient',
+            attributes: ['id'],
+            include:[
+              {
+                model: Utilisateur,
+                attributes: ['id', 'nom', 'prenom', 'email', 'role'],
+                as: 'Utilisateur'
+              }
+            ]
+          },
+        ],
+      });
+      return res.json(chatrooms);
+    }
+  } catch (err) {
+    console.warn({ err });
+    return res.status(500).json({ message: 'Erreur lors de la récupération des chatrooms', error: err });
+  }
+});
+
+
+
+
+
 //mise à jour
 app.post('/consultations/:consultationId/accept', verifyToken, async (req, res) => {
   try {
@@ -77,15 +149,32 @@ app.post('/consultations/:consultationId/accept', verifyToken, async (req, res) 
     }
     const medecin = await Medecin.findOne({UtilisateurId: req.user.id});  
     if (!medecin) {
-      res.status(403).send({ message : 'Vous n\'avez pas acces à cette ressource (Medecin non trouvé)'})
+       return res.status(403).send({ message : 'Vous n\'avez pas acces à cette ressource (Medecin non trouvé)'})
     }
     consultation.etat = true; // Setting etat to true to mark it as accepted
     consultation.MedecinId = medecin.id;
     consultation.updatedAt = new Date();
     await consultation.save();
+    const patient = await  Patient.findByPk(consultation.PatientId);
+    const [chatroom, create] = await ChatRoom.findOrCreate({
+      where: {
+        MedecinId: medecin.id,
+        PatientId: consultation.PatientId
+      },
+      defaults: {
+        nom: "chat between " + req.user.nom + " and patient " + consultation.PatientId
+      }
+    });
 
-    res.status(200).json({ message: 'Consultation acceptée avec succès', consultation });
+    if (chatroom) {
+      await Message.create({ChatRoomId: chatroom.id, contenu:consultation.title , UtilisateurId: patient.UtilisateurId, date_envoi: consultation.createdAt});
+      await Message.create({ChatRoomId: chatroom.id, contenu:consultation.description, UtilisateurId: patient.UtilisateurId, date_envoi: consultation.createdAt});
+      await Message.create({ChatRoomId: chatroom.id, contenu:"Merci je vous prends en charge.", UtilisateurId: medecin.UtilisateurId, date_envoi: Date.now()});
+    }
+
+    return res.status(200).json({ message: 'Consultation acceptée avec succès', consultation });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -96,7 +185,7 @@ app.post('/consultation', verifyToken, async (req, res) => {
     const { title, description, service, dontKnow } = req.body;
     const patient = await Patient.findOne({UtilisateurId: req.user.id});  
     if (!patient) {
-      res.status(403).send({ message : 'Vous n\'avez pas acces à cette ressource (patient non trouvé)'})
+      return res.status(403).send({ message : 'Vous n\'avez pas acces à cette ressource (patient non trouvé)'})
     }
     const consultation = await Consultation.create({
       date_heure: new Date(), // Utiliser la date et l'heure actuelles
@@ -106,9 +195,9 @@ app.post('/consultation', verifyToken, async (req, res) => {
       ServiceId: service    
     });
 
-    res.status(201).json(consultation);
+    return res.status(201).json(consultation);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return es.status(500).json({ error: error.message });
   }
 });
 
@@ -123,15 +212,15 @@ app.get('/consultations', verifyToken, async (req, res) => {
 
     const medecin = await Medecin.findOne({UtilisateurId: req.user.id});  
     if (!medecin) {
-      res.status(403).send({ message : 'Vous n\'avez pas acces à cette ressource (Medecin non trouvé)'})
+      return res.status(403).send({ message : 'Vous n\'avez pas acces à cette ressource (Medecin non trouvé)'})
     }
     const consultations = await Consultation.findAll({
-      where: { ServiceId: medecin.ServiceId },
+      where: { ServiceId: medecin.ServiceId, etat:false }, 
       order: [['date_heure', 'DESC']]
     });
-    res.json(consultations);
+    return res.json(consultations);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 });
 
@@ -299,8 +388,6 @@ app.post('/logout', async(req, res) => {
     // Vérifier la validité du token
     const decoded = jwt.verify(token, 'votre_cle_secrete');
 
-    // Supprimer le token côté serveur (optionnel)
-    // Cela empêche l'utilisation du même token pour une nouvelle connexion
     await TokenBlacklist.create({ token: token });
 
     // Retourner une réponse de succès
@@ -312,21 +399,3 @@ app.post('/logout', async(req, res) => {
 
 
 
-
-app.post('/api/consultation', async (req, res) => {
-  const { date_heure, patient_id, medecin_id, description, rendez_vous_id, etat } = req.body;
-  
-  try {
-    const consultation = await Consultation.create({
-      date_heure,
-      patient_id,
-      medecin_id,
-      description,
-      rendez_vous_id,
-      etat
-    });
-    res.status(201).json(consultation);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});

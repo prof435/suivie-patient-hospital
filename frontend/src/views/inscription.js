@@ -45,7 +45,14 @@ const Inscription = () => {
       }});
 
       setMessage({ type: 'success', content: 'Utilisateur créé avec succès!' });
-      console.log('Utilisateur créé :', response.data);
+      setEmail('');
+      setNom('');
+      setPassword('');
+      setNumeroDeTelephone('');
+      setTypeCompte('');
+      setTimeout(() => {
+        window.location.href = '/login';
+      }, 3000);
     } catch (error) {
       setMessage({ type: 'danger', content: 'Erreur lors de l\'inscription : ' + error.response.data.error });
       console.error('Erreur lors de l\'inscription :', error.response.data.error);

@@ -12,7 +12,7 @@ const MédecinGénéraliste = () => {
       <h1>Informations du patient</h1>
       <p>Nom : <input type="text" required /></p>
       <p>Prénom : <input type="text" required /></p>
-      : <input type="date" required /></p>
+      <p>Date de naissance : <input type="date" required /></p>
       <p>Sexe : 
         <label><input type="radio" name="sexe" value="homme" required /> Homme</label>
         <label><input type="radio" name="sexe" value="femme" required /> Femme</label>

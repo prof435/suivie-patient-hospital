@@ -18,7 +18,7 @@ const Connexion = () => {
     event.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:5000/login',{ headers:{
+      const response = await axios.post(`http://${window.location.hostname}:5000/login`,{ headers:{
       'Content-Type' : 'application/json'}, data:{ email:email,  mot_de_passe: password }});
       const { token } = response.data;
 

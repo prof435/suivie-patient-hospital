@@ -23,7 +23,7 @@ app.use((req, res, next) => {
 
 
 const corsOptions = {
-  origin: 'http://localhost:3000', // Remplacez par l'origine que vous souhaitez autoriser
+  origin: '*', // Remplacez par l'origine que vous souhaitez autoriser
   optionsSuccessStatus: 200 // Pour les navigateurs plus anciens (IE11, diverses versions SmartTVs) qui n'acceptent pas les 204 comme réponse
 };
 
@@ -44,14 +44,14 @@ const   verifyToken = async (req, res, next) => {
     if(!token){
       return res.status(401).json({ message: 'Token d\'authentification non trouvé !!' });
     }
-    const test  = jwt.verify(token, 'votre_cle_secrete');
+    const test  = jwt.verify(token, 'votre_cle_secrete'); 
     if(!test){
       return res.status(402).json({ message: 'Token d\'authentification invalide ou expiré !!' });
     }
     const utilisateur = await Utilisateur.findByPk(test.userId);
     req.user = utilisateur;
-    utilisateur.date_heure_connexion = new Date().toISOString().replace(/T/g, ' ').replace(/\..+$/, '');
-    utilisateur.updatedAt = new Date().toISOString().replace(/T/g, ' ').replace(/\..+$/, '');
+    utilisateur.date_heure_connexion = new Date().toISOString();
+    utilisateur.updatedAt = new Date().toISOString();
     await utilisateur.save();
     next();
   } catch (err) {
@@ -82,7 +82,7 @@ app.post('/chatrooms/:chatroomId/messages', verifyToken, async (req, res) => {
       ChatRoomId: chatroomId,
       contenu,
       UtilisateurId: req.user.id,
-      date_envoi:  new Date().toISOString().replace(/T/g, ' ').replace(/\..+$/, '')
+      date_envoi:  new Date().toISOString()
     });
 
     chatroom.updatedAt =  Date.now();
@@ -96,10 +96,10 @@ app.post('/chatrooms/:chatroomId/messages', verifyToken, async (req, res) => {
 });
 
 
-
+// renvoie la liste des messages du chatroom
 app.get('/chatrooms/:chatRoomId', verifyToken, async (req, res) => {
   try {
-    const chats =  await Message.findAll({where:{chatRoomId:req.params.chatRoomId}, order:[['date_envoi', 'ASC']]});
+    const chats =  await Message.findAll({where:{chatRoomId:req.params.chatRoomId}, order:[['date_envoi', 'DESC']]});
     res.status(200).json(chats);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -124,7 +124,7 @@ app.get('/chatrooms', verifyToken, async (req, res) => {
             model: Message,
             as: 'Messages',
             attributes: ['id', 'contenu', 'createdAt', 'date_envoi', 'UtilisateurId'],
-            limit: 17,
+            limit: 3,
             order: [['date_envoi', 'DESC']],
           },
           {
@@ -152,7 +152,7 @@ app.get('/chatrooms', verifyToken, async (req, res) => {
             model: Message,
             as: 'Messages',
             attributes: ['id', 'contenu', 'createdAt', 'UtilisateurId', 'date_envoi'],
-            limit: 17,
+            limit: 3,
             order: [['date_envoi', 'DESC']],
           },
           {
@@ -201,7 +201,7 @@ app.post('/consultation/rapport', verifyToken, async (req, res) => {
       return res.status(403).send({ message : 'Vous n\'avez pas acces à cette ressource (patient non trouvé)'})
     }
     const rapport = await RapportConsultation.create({
-      createdAt: new Date().toISOString().replace(/T/g, ' ').replace(/\..+$/, ''),
+      createdAt: new Date().toISOString(),
       contenu: contenu,
       ConsultationId : consultation.id,  
     });
@@ -217,7 +217,7 @@ app.post('/consultation/rapport', verifyToken, async (req, res) => {
     });
 
     if (chatRoom) {
-      await Message.create({ChatRoomId: chatRoom.id, contenu:"Consutation fermée par le Médecin", UtilisateurId: null, date_envoi: new Date().toISOString().replace(/T/g, ' ').replace(/\..+$/, '')});
+      await Message.create({ChatRoomId: chatRoom.id, contenu:"Consutation fermée par le Médecin", UtilisateurId: null, date_envoi: new Date().toISOString()});
     }
 
     return res.status(201).json(rapport);
@@ -242,24 +242,29 @@ app.post('/consultations/:consultationId/accept', verifyToken, async (req, res) 
     if (!consultation) {
       return res.status(404).json({ message: 'Consultation non trouvée' });
     }
-    const medecin = await Medecin.findOne({UtilisateurId: req.user.id});  
+    const medecin = await Medecin.findOne({where:{UtilisateurId: req.user.id}});  
     if (!medecin) {
        return res.status(403).send({ message : 'Vous n\'avez pas acces à cette ressource (Medecin non trouvé)'})
     }
-    consultation.etat = "Accepter"; // Setting etat to true to mark it as accepted
-    consultation.MedecinId = medecin.id;
-    consultation.updatedAt = new Date().toISOString().replace(/T/g, ' ').replace(/\..+$/, '');
-    await consultation.save();
+    var chatroom = null
     const patient = await  Patient.findByPk(consultation.PatientId);
-    const [chatroom, create] = await ChatRoom.findOrCreate({
-      where: {
-        MedecinId: medecin.id,
-        PatientId: consultation.PatientId
-      },
-      defaults: {
-        nom: "chat between " + req.user.nom + " and patient " + consultation.PatientId
-      }
+    const room = await ChatRoom.findOne( {
+      MedecinId: medecin.id,
+      PatientId: consultation.PatientId
     });
+    if (room) {
+      chatroom = room;
+    }else {
+      const room  = await ChatRoom.create(
+         {
+          MedecinId: medecin.id,
+          PatientId: consultation.PatientId,
+          nom: "chat between " + req.user.nom + " and patient " + consultation.PatientId
+        }
+      );
+
+      chatroom = room;
+    }
 
     if (chatroom) {
       await Message.create({ChatRoomId: chatroom.id, contenu:consultation.title , UtilisateurId: patient.UtilisateurId, date_envoi: consultation.createdAt});
@@ -267,7 +272,13 @@ app.post('/consultations/:consultationId/accept', verifyToken, async (req, res) 
       await Message.create({ChatRoomId: chatroom.id, contenu:"Merci je vous prends en charge.", UtilisateurId: medecin.UtilisateurId, date_envoi: new Date().toISOString()});
     }
 
-    return res.status(200).json({ message: 'Consultation acceptée avec succès', consultation });
+    consultation.etat = "Accepter"; // Setting etat to true to mark it as accepted
+    consultation.MedecinId = medecin.id;
+    consultation.updatedAt = new Date().toISOString();
+    await consultation.save();
+
+
+    return res.status(200).json({ message: 'Consultation acceptée avec succès', consultation, chatroom });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: err.message });
@@ -283,7 +294,7 @@ app.post('/consultation', verifyToken, async (req, res) => {
       return res.status(403).send({ message : 'Vous n\'avez pas acces à cette ressource (patient non trouvé)'})
     }
     const consultation = await Consultation.create({
-      date_heure: new Date().toISOString().replace(/T/g, ' ').replace(/\..+$/, ''),
+      date_heure: new Date().toISOString(),
       title,
       description,
       PatientId : patient.id,
@@ -429,8 +440,8 @@ app.post('/login', async (req, res) => {
 
     // Générer un token JWT
     const token = jwt.sign({ userId: user.id }, 'votre_cle_secrete', { expiresIn: '20h' });
-    user.date_heure_connexion = new Date().toISOString().replace(/T/g, ' ').replace(/\..+$/, '');
-    user.updatedAt = new Date().toISOString().replace(/T/g, ' ').replace(/\..+$/, '');
+    user.date_heure_connexion = new Date().toISOString();
+    user.updatedAt = new Date().toISOString();
     await user.save();
    
     res.json({ token });

@@ -17,7 +17,7 @@ const ChatRoom = ()=>{
     const getUser = async()=>{
         setUser(null);
         const authToken = localStorage.getItem('authToken');
-        await axios.get("http://localhost:5000/user", {
+        await axios.get(`http://${window.location.hostname}:5000/user`, {
             headers: {
                 'Authorization': `Bearer ${authToken}`,
                 'Content-Type' : 'application/json'
@@ -34,13 +34,14 @@ const ChatRoom = ()=>{
 
     const getChatRooms = async()=>{
         const authToken = localStorage.getItem('authToken');
-        await axios.get("http://localhost:5000/chatrooms", {
+        await axios.get(`http://${window.location.hostname}:5000/chatrooms`, {
             headers: {
                 'Authorization': `Bearer ${authToken}`,
                 'Content-Type' : 'application/json'
             }
         })
        .then((response)=>{
+        console.log(response);
         if(response.status === 200){
             setChatRooms(response.data);
             setLoaded(true);

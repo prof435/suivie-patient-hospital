@@ -99,7 +99,7 @@ const NavBAr = ()=>{
                             </div>
                         </div>
                     </div>
-                    <a href="/" class="btn btn-primary rounded-0 py-4 px-lg-5 d-none d-lg-block">Commencer<i class="fa fa-arrow-right ms-3"></i></a>
+                    <a href="/" class="btn btn-primary rounded-0 py-4 px-lg-5 d-none d-lg-block">retour<i class="fa fa-arrow-right ms-3"></i></a>
                 </div>
             </nav>
     );

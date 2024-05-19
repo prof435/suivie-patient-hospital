@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import Header from '../partials/header';
+
 import Footer from '../partials/footer';
 import { Link } from 'react-router-dom';
-
-const Docteur = () => {
+import { NavBAr ,TopNav } from '../partials/header';
+const Rendez_vous= () => {
   const [patients, setPatients] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedDoctor, setSelectedDoctor] = useState(null);
@@ -43,7 +43,8 @@ const Docteur = () => {
 
   return (
     <>
-      <Header />
+      <NavBAr/>
+       <TopNav/>
       {/* <div className="Docteur" style={{ backgroundImage: "url('chemin_vers_votre_image')" }}>
         <div className="container">
           <h1 className="titre">Prenez un rendez-vous</h1>
@@ -85,4 +86,4 @@ const Docteur = () => {
   );
 };
 
-export default Docteur;
+export default Rendez_vous;

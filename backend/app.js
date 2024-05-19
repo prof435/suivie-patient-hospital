@@ -99,7 +99,7 @@ app.post('/chatrooms/:chatroomId/messages', verifyToken, async (req, res) => {
 
 app.get('/chatrooms/:chatRoomId', verifyToken, async (req, res) => {
   try {
-    const chats =  await Message.findAll({where:{chatRoomId:req.params.chatRoomId}, order:['date_envoi', 'DESC']});
+    const chats =  await Message.findAll({where:{chatRoomId:req.params.chatRoomId}, order:[['date_envoi', 'ASC']]});
     res.status(200).json(chats);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -123,8 +123,8 @@ app.get('/chatrooms', verifyToken, async (req, res) => {
           {
             model: Message,
             as: 'Messages',
-            attributes: ['id', 'contenu', 'createdAt', 'date_envoi'],
-            limit: 1,
+            attributes: ['id', 'contenu', 'createdAt', 'date_envoi', 'UtilisateurId'],
+            limit: 17,
             order: [['date_envoi', 'DESC']],
           },
           {
@@ -152,7 +152,7 @@ app.get('/chatrooms', verifyToken, async (req, res) => {
             model: Message,
             as: 'Messages',
             attributes: ['id', 'contenu', 'createdAt', 'UtilisateurId', 'date_envoi'],
-            limit: 1,
+            limit: 17,
             order: [['date_envoi', 'DESC']],
           },
           {
@@ -179,6 +179,54 @@ app.get('/chatrooms', verifyToken, async (req, res) => {
 
 
 
+//Creation 
+app.post('/consultation/rapport', verifyToken, async (req, res) => {
+  try {
+
+    if(req.user.role !== "Medecin"){
+      return res.status(403).send({ message : 'Vous n\'avez pas acces à cette ressource (Medecin ent non trouvé)'})
+    }
+    const { contenu , MedecinId, PatientId} = req.body;
+    const consultation = await Consultation.findOne({
+      where: {
+        MedecinId: MedecinId,
+        PatientId: PatientId
+      },
+      order: [
+        ['createdAt', 'DESC']
+      ]
+    });
+     
+    if (!consultation) {
+      return res.status(403).send({ message : 'Vous n\'avez pas acces à cette ressource (patient non trouvé)'})
+    }
+    const rapport = await RapportConsultation.create({
+      createdAt: new Date().toISOString().replace(/T/g, ' ').replace(/\..+$/, ''),
+      contenu: contenu,
+      ConsultationId : consultation.id,  
+    });
+
+    const chatRoom =  await ChatRoom.findOne({
+      where: {
+        MedecinId: MedecinId,
+        PatientId: PatientId
+      },
+      order: [
+        ['createdAt', 'DESC']
+      ]
+    });
+
+    if (chatRoom) {
+      await Message.create({ChatRoomId: chatRoom.id, contenu:"Consutation fermée par le Médecin", UtilisateurId: null, date_envoi: new Date().toISOString().replace(/T/g, ' ').replace(/\..+$/, '')});
+    }
+
+    return res.status(201).json(rapport);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+
 
 
 //mise à jour
@@ -198,7 +246,7 @@ app.post('/consultations/:consultationId/accept', verifyToken, async (req, res) 
     if (!medecin) {
        return res.status(403).send({ message : 'Vous n\'avez pas acces à cette ressource (Medecin non trouvé)'})
     }
-    consultation.etat = true; // Setting etat to true to mark it as accepted
+    consultation.etat = "Accepter"; // Setting etat to true to mark it as accepted
     consultation.MedecinId = medecin.id;
     consultation.updatedAt = new Date().toISOString().replace(/T/g, ' ').replace(/\..+$/, '');
     await consultation.save();
@@ -262,7 +310,7 @@ app.get('/consultations', verifyToken, async (req, res) => {
       return res.status(403).send({ message : 'Vous n\'avez pas acces à cette ressource (Medecin non trouvé)'})
     }
     const consultations = await Consultation.findAll({
-      where: { ServiceId: medecin.ServiceId, etat:false }, 
+      where: { ServiceId: medecin.ServiceId, etat:"Ouvert" }, 
       order: [['date_heure', 'DESC']]
     });
     return res.json(consultations);

@@ -143,8 +143,8 @@ const Consultation = sequelize.define('Consultation', {
     allowNull: true
   },
   etat: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false
+    type: DataTypes.ENUM('Ouvert', 'Accepter', 'Fermer'),
+    defaultValue: "Ouvert"
   }
 });
 

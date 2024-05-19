@@ -23,7 +23,7 @@ const Consultation = () => {
     const getUser = async()=>{
         setUser(null);
         const authToken = localStorage.getItem('authToken');
-        await axios.get("http://localhost:5000/user", {
+        await axios.get(`http://${window.location.hostname}:5000/user`, {
             headers: {
                 'Authorization': `Bearer ${authToken}`,
             'Content-Type' : 'application/json'
@@ -53,7 +53,7 @@ const Consultation = () => {
       variant: 'success'
     });
     const token = localStorage.getItem('authToken');
-    await axios.get('http://localhost:5000/services', {
+    await axios.get(`http://${window.location.hostname}:5000/services`, {
       headers: {
         'Authorization': `Bearer ${token}`
       
@@ -91,6 +91,9 @@ const Consultation = () => {
       }
     });
   };
+
+
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setAlert({
@@ -102,7 +105,7 @@ const Consultation = () => {
     const medGeneral = services.filter((service) => service.nom === "Médecine générale");
     const data = {...formData, token: token, service: formData.dontKnow ? [...medGeneral][0].id : formData.service };
     try {
-      await axios.post('http://localhost:5000/consultation', data, {
+      await axios.post(`http://${window.location.hostname}:5000/consultation`, data, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -126,11 +129,13 @@ const Consultation = () => {
   const handleAccept = async (consultationId) => {
     try {
       const authToken = localStorage.getItem('authToken');
-      await axios.post(`http://localhost:5000/consultations/${consultationId}/accept`, {}, {
+       const res = await axios.post(`http://${window.location.hostname}:5000/consultations/${consultationId}/accept`, {}, {
         headers: { Authorization: `Bearer ${authToken}`,
         'Content-Type' : 'application/json' }
       });
+      console.log(res);
       setAlert({ show: true, message: 'Consultation acceptée avec succès!', variant: 'success' });
+      
       setTimeout(() => {
         window.location.href = '/chat';
       }, 2000);
@@ -155,7 +160,7 @@ const Consultation = () => {
             const fetchConsultations = async () => {
               try {
                 const authToken = localStorage.getItem('authToken');
-                const response = await axios.get('http://localhost:5000/consultations', {
+                const response = await axios.get(`http://${window.location.hostname}:5000/consultations`, {
                   headers: { Authorization: `Bearer ${authToken}`,
                   'Content-Type' : 'application/json' }
                 });

@@ -41,7 +41,7 @@ const NavBAr = ()=>{
     const getUser = async()=>{
         setUser(null);
         const authToken = localStorage.getItem('authToken');
-        await axios.get("http://localhost:5000/user", {
+        await axios.get(`http://${window.location.hostname}:5000/user`, {
             headers: {
                 'Authorization': `Bearer ${authToken}`
               

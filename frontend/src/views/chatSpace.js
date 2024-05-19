@@ -12,11 +12,12 @@ const ChatSpace = ({ chatroom }) => {
     const [user, setUser] = useState(null);
     const [modalShow, setModalShow] = useState(false);
 
+    /// recuperer les informations de l'utilisateur connecté
     const getUser = async () => {
         setAlert({ show: false, variant: 'info', message: '', content: '' });
         setUser(null);
         const authToken = localStorage.getItem('authToken');
-        await axios.get("http://localhost:5000/user", {
+        await axios.get(`http://${window.location.hostname}:5000/user`, {
             headers: {
                 'Authorization': `Bearer ${authToken}`,
                 'Content-Type': 'application/json'
@@ -40,15 +41,19 @@ const ChatSpace = ({ chatroom }) => {
         });
     };
 
+
+    //efficher et fermer le modal
     const handleModalClose = () => setModalShow(false);
     const handleModalShow = () => setModalShow(true);
 
+
+    //enrigistrer le rapport de consultion
     const handleSave = async(data) => {
         console.log('Data saved:', data);
         const authToken = localStorage.getItem('authToken');
         try {
             await axios.post(
-                `http://localhost:5000/consultation/rapport`,
+                `http://${window.location.hostname}:5000/consultation/rapport`,
                 { contenu: data },
                 {
                     headers: {
@@ -76,13 +81,18 @@ const ChatSpace = ({ chatroom }) => {
         handleModalClose();
     };
 
+
+
+
+
+    // recuperer les message de la discussion
     const getChats = async (chatroomId) => {
         if (!chatroomId) {
             return;
         }
         try {
             const authToken = localStorage.getItem('authToken');
-            const response = await axios.get(`http://localhost:5000/chatrooms/${chatroomId}`, {
+            const response = await axios.get(`http://${window.location.hostname}:5000/chatrooms/${chatroomId}`, {
                 headers: {
                     'Authorization': `Bearer ${authToken}`,
                     'Content-Type': 'application/json'
@@ -94,12 +104,14 @@ const ChatSpace = ({ chatroom }) => {
         }
     };
 
+
+    //enregistrer le message
     const handleSubmit = async (e) => {
         e.preventDefault();
         const authToken = localStorage.getItem('authToken');
         try {
             await axios.post(
-                `http://localhost:5000/chatrooms/${chatroom?.id}/messages`,
+                `http://${window.location.hostname}:5000/chatrooms/${chatroom?.id}/messages`,
                 { contenu: message },
                 {
                     headers: {
@@ -121,6 +133,8 @@ const ChatSpace = ({ chatroom }) => {
             }, 2000);
         }
     };
+
+
 
     const handleKeyPress = async (e) => {
         if (e.key === 'Enter' && !e.shiftKey && !e.ctrlKey && !e.altKey && !e.metaKey) {
@@ -194,7 +208,7 @@ const ChatSpace = ({ chatroom }) => {
                             </div>
                         </div>
                     ) : (
-                        <div key={chat.id} className={`message-feed ${user?.id === chat?.UtilisateurId ? 'media' : 'right'}`}>
+                        <div key={chat.id} className={`message-feed ${user?.id === chat?.UtilisateurId ? 'right':'media'}`}>
                             <div className={user?.id === chat?.UtilisateurId ? 'pull-left' : 'pull-right'}>
                                 <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" className="img-avatar" />
                             </div>
@@ -208,7 +222,7 @@ const ChatSpace = ({ chatroom }) => {
                     )}
                 </>
             )) : chatroom?.Messages?.map((chat) => (
-                <div key={chat?.id} className={`message-feed ${user?.id === chat?.UtilisateurId ? 'media' : 'right'}`}>
+                <div key={chat?.id} className={`message-feed ${user?.id === chat?.UtilisateurId ?  'right':'media'}`}>
                     <div className={user?.id === chat?.UtilisateurId ? 'pull-left' : 'pull-right'}>
                         <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" className="img-avatar" />
                     </div>

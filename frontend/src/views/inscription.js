@@ -33,7 +33,7 @@ const Inscription = () => {
     setMessage({content: '', type: 'none'});
 
     try {
-      const response = await axios.post('http://localhost:5000/register', {headers:{
+      const response = await axios.post(`http://${window.location.hostname}:5000/register`, {headers:{
       'Content-Type' : 'application/json'}, data:{
         nom,
         prenom,

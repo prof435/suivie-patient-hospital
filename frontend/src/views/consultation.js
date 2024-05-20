@@ -194,10 +194,10 @@ const Consultation = () => {
           )}
           <div className="card">
             <div className="card-header">
-              <h2 className="card-title">Formulaire de demande de consultation</h2>
+              <h2 className="card-title"> Bienvenue dans la page de consultation </h2>
             </div>
             <div className="card-body">
-              <h3 className="mb-4">Comment vous sentez-vous aujourd'hui ?</h3>
+              <h3 className="mb-4"> comment est-ce que nous pouvons vous aidez?</h3>
               <form className='form-container' onSubmit={handleSubmit}>
                 <div className='form-group mb-3'>
                   <label htmlFor="title">Titre</label>

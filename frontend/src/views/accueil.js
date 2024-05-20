@@ -1,243 +1,208 @@
-import React, {useEffect, useState} from 'react';
-//import { TopNav} from '../partials/header';
+import React from 'react';
 import { NavBAr ,TopNav } from '../partials/header';
-
 import Footer from '../partials/footer';
 
-const Accueil = ()=>{
+const Accueil = () => {
     return (
         <>
-       <NavBAr/>
-       <TopNav/>
-            <div class="container-xxl py-5">
-                <div class="container">
-                    <div class="row g-5">
-                        <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
-                            <div class="d-flex flex-column">
-                                <img class="img-fluid rounded w-75 align-self-end" src="img/departments-1.jpg" alt="" />
-                                <img class="img-fluid rounded w-50 bg-white pt-3 pe-3" src="img/about-2.jpg" alt="" style={{"margin-top": "-25%"}} />
+             <TopNav/>
+            <NavBAr/>
+           
+            <div className="container-xxl py-5">
+                <div className="container">
+                    <div className="row g-5">
+                        <div className="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
+                            <div className="d-flex flex-column">
+                                <img className="img-fluid rounded w-75 align-self-end" src="img/departments-1.jpg" alt="" />
+                                <img className="img-fluid rounded w-50 bg-white pt-3 pe-3" src="img/about-2.jpg" alt="" style={{ "marginTop": "-25%"}} />
                             </div>
                         </div>
-                        <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
-                            <p class="d-inline-block border rounded-pill py-1 px-4">About Us</p>
-                            <h1 class="mb-4">Why You Should Trust Us? Get Know About Us!</h1>
-                            <p>Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo magna dolore erat amet</p>
-                            <p class="mb-4">Stet no et lorem dolor et diam, amet duo ut dolore vero eos. No stet est diam rebum amet diam ipsum. Clita clita labore, dolor duo nonumy clita sit at, sed sit sanctus dolor eos.</p>
-                            <p><i class="far fa-check-circle text-primary me-3"></i>Quality health care</p>
-                            <p><i class="far fa-check-circle text-primary me-3"></i>Only Qualified Doctors</p>
-                            <p><i class="far fa-check-circle text-primary me-3"></i>Medical Research Professionals</p>
-                            <a class="btn btn-primary rounded-pill py-3 px-5 mt-3" href="">Read More</a>
+                        <div className="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
+                            <p className="d-inline-block border rounded-pill py-1 px-4">À Propos</p>
+                            <h1 className="mb-4">Pourquoi Nous Faire Confiance ? Apprenez à Nous Connaître !</h1>
+                            <p>Notre engagement est de fournir des soins de santé de qualité supérieure, soutenus par une équipe de médecins qualifiés et de professionnels de la recherche médicale. Nous sommes déterminés à offrir des services qui répondent aux besoins uniques de chaque patient, en mettant l'accent sur l'excellence clinique et le confort du patient.</p>
+                            <p className="mb-4">Chez nous, vous trouverez une équipe de médecins expérimentés, spécialisés dans divers domaines tels que la cardiologie, la pneumologie, la neurologie, l'orthopédie, la chirurgie dentaire, et bien d'autres encore.</p>
+                            <p><i className="far fa-check-circle text-primary me-3"></i>Soins de santé de qualité</p>
+                            <p><i className="far fa-check-circle text-primary me-3"></i>Médecins Qualifiés Uniquement</p>
+                            <p><i className="far fa-check-circle text-primary me-3"></i>Professionnels de la Recherche Médicale</p>
+                            <a className="btn btn-primary rounded-pill py-3 px-5 mt-3" href="">En Savoir Plus</a>
                         </div>
                     </div>
                 </div>
             </div>
             
-
-            <div class="container-xxl py-5">
-                <div class="container">
-                    <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style={{"max-width": "600px"}}>
-                        <p class="d-inline-block border rounded-pill py-1 px-4">Services</p>
-                        <h1>Health Care Solutions</h1>
+            <div className="container-xxl py-5">
+                <div className="container">
+                    <div className="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style={{ "maxWidth": "600px"}}>
+                        <p className="d-inline-block border rounded-pill py-1 px-4">Services</p>
+                        <h1>Solutions de Soins de Santé</h1>
                     </div>
-                    <div class="row g-4">
-                        <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                            <div class="service-item bg-light rounded h-100 p-5">
-                                <div class="d-inline-flex align-items-center justify-content-center bg-white rounded-circle mb-4" style={{"width": "65px", "height": "65px"}}>
-                                    <i class="fa fa-heartbeat text-primary fs-4"></i>
+                    <div className="row g-4">
+                        <div className="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                            <div className="service-item bg-light rounded h-100 p-5">
+                                <div className="d-inline-flex align-items-center justify-content-center bg-white rounded-circle mb-4" style={{ "width": "65px", "height": "65px"}}>
+                                    <i className="fa fa-heartbeat text-primary fs-4"></i>
                                 </div>
-                                <h4 class="mb-3">Cardiology</h4>
-                                <p class="mb-4">Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet.</p>
-                                <a class="btn" href=""><i class="fa fa-plus text-primary me-3"></i>Read More</a>
+                                <h4 className="mb-3">Cardiologie</h4>
+                                <p className="mb-4">Notre équipe de cardiologues expérimentés est dédiée à fournir des soins de haute qualité pour les maladies cardiaques, en mettant l'accent sur la prévention, le diagnostic et le traitement.</p>
+                                <a className="btn" href=""><i className="fa fa-plus text-primary me-3"></i>En Savoir Plus</a>
                             </div>
                         </div>
-                        <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                            <div class="service-item bg-light rounded h-100 p-5">
-                                <div class="d-inline-flex align-items-center justify-content-center bg-white rounded-circle mb-4" style={{"width": "65px", height: "65px"}}>
-                                    <i class="fa fa-x-ray text-primary fs-4"></i>
+                        <div className="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+                            <div className="service-item bg-light rounded h-100 p-5">
+                                <div className="d-inline-flex align-items-center justify-content-center bg-white rounded-circle mb-4" style={{ "width": "65px", "height": "65px"}}>
+                                    <i className="fa fa-x-ray text-primary fs-4"></i>
                                 </div>
-                                <h4 class="mb-3">Pulmonary</h4>
-                                <p class="mb-4">Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet.</p>
-                                <a class="btn" href=""><i class="fa fa-plus text-primary me-3"></i>Read More</a>
+                                <h4 className="mb-3">Pneumologie</h4>
+                                <p className="mb-4">Nos pneumologues experts offrent des services de diagnostic et de traitement pour une gamme de maladies respiratoires, assurant des soins complets et personnalisés pour chaque patient.</p>
+                                <a className="btn" href=""><i className="fa fa-plus text-primary me-3"></i>En Savoir Plus</a>
                             </div>
                         </div>
-                        <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                            <div class="service-item bg-light rounded h-100 p-5">
-                                <div class="d-inline-flex align-items-center justify-content-center bg-white rounded-circle mb-4" style={{width: "65px", height: "65px"}}>
-                                    <i class="fa fa-brain text-primary fs-4"></i>
+                        <div className="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                            <div className="service-item bg-light rounded h-100 p-5">
+                                <div className="d-inline-flex align-items-center justify-content-center bg-white rounded-circle mb-4" style={{ "width": "65px", "height": "65px"}}>
+                                    <i className="fa fa-brain text-primary fs-4"></i>
                                 </div>
-                                <h4 class="mb-3">Neurology</h4>
-                                <p class="mb-4">Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet.</p>
-                                <a class="btn" href=""><i class="fa fa-plus text-primary me-3"></i>Read More</a>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                            <div class="service-item bg-light rounded h-100 p-5">
-                                <div class="d-inline-flex align-items-center justify-content-center bg-white rounded-circle mb-4" style={{"width": "65px", height:" 65px"}}>
-                                    <i class="fa fa-wheelchair text-primary fs-4"></i>
-                                </div>
-                                <h4 class="mb-3">Orthopedics</h4>
-                                <p class="mb-4">Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet.</p>
-                                <a class="btn" href=""><i class="fa fa-plus text-primary me-3"></i>Read More</a>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                            <div class="service-item bg-light rounded h-100 p-5">
-                                <div class="d-inline-flex align-items-center justify-content-center bg-white rounded-circle mb-4" style={{"width": "65px", height: "65px"}}>
-                                    <i class="fa fa-tooth text-primary fs-4"></i>
-                                </div>
-                                <h4 class="mb-3">Dental Surgery</h4>
-                                <p class="mb-4">Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet.</p>
-                                <a class="btn" href=""><i class="fa fa-plus text-primary me-3"></i>Read More</a>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                            <div class="service-item bg-light rounded h-100 p-5">
-                                <div class="d-inline-flex align-items-center justify-content-center bg-white rounded-circle mb-4" style={{"width": "65px", height:" 65px"}}>
-                                    <i class="fa fa-vials text-primary fs-4"></i>
-                                </div>
-                                <h4 class="mb-3">Laboratory</h4>
-                                <p class="mb-4">Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet.</p>
-                                <a class="btn" href=""><i class="fa fa-plus text-primary me-3"></i>Read More</a>
+                                <h4 className="mb-3">Neurologie</h4>
+                                <p className="mb-4">Notre équipe de neurologues qualifiés est spécialisée dans le diagnostic et le traitement des troubles neurologiques, fournissant des soins complets et personnalisés pour les patients atteints de maladies du système nerveux.</p>
+                                <a className="btn" href=""><i className="fa fa-plus text-primary me-3"></i>En Savoir Plus</a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             
-
-            <div class="container-fluid bg-primary overflow-hidden my-5 px-lg-0">
-                <div class="container feature px-lg-0">
-                    <div class="row g-0 mx-lg-0">
-                        <div class="col-lg-6 feature-text py-5 wow fadeIn" data-wow-delay="0.1s">
-                            <div class="p-lg-5 ps-lg-0">
-                                <p class="d-inline-block border rounded-pill text-light py-1 px-4">Features</p>
-                                <h1 class="text-white mb-4">Why Choose Us</h1>
-                                <p class="text-white mb-4 pb-2">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo erat amet</p>
-                                <div class="row g-4">
-                                    <div class="col-6">
-                                        <div class="d-flex align-items-center">
-                                            <div class="d-flex flex-shrink-0 align-items-center justify-content-center rounded-circle bg-light" style={{"width": "55px", height: "55px",}}>
-                                                <i class="fa fa-user-md text-primary"></i>
+            <div className="container-fluid bg-primary overflow-hidden my-5 px-lg-0">
+                <div className="container feature px-lg-0">
+                <div className="row g-0 mx-lg-0">
+                        <div className="col-lg-6 feature-text py-5 wow fadeIn" data-wow-delay="0.1s">
+                            <div className="p-lg-5 ps-lg-0">
+                                <p className="d-inline-block border rounded-pill text-light py-1 px-4">Fonctionnalités</p>
+                                <h1 className="text-white mb-4">Pourquoi Nous Choisir</h1>
+                                <p className="text-white mb-4 pb-2">Notre équipe s'engage à fournir des soins de santé de la plus haute qualité, soutenus par une expérience clinique éprouvée, des services de qualité supérieure et un engagement envers l'excellence médicale.</p>
+                                <div className="row g-4">
+                                    <div className="col-6">
+                                        <div className="d-flex align-items-center">
+                                            <div className="d-flex flex-shrink-0 align-items-center justify-content-center rounded-circle bg-light" style={{ "width": "55px", "height": "55px"}}>
+                                                <i className="fa fa-user-md text-primary"></i>
                                             </div>
-                                            <div class="ms-4">
-                                                <p class="text-white mb-2">Experience</p>
-                                                <h5 class="text-white mb-0">Doctors</h5>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="d-flex align-items-center">
-                                            <div class="d-flex flex-shrink-0 align-items-center justify-content-center rounded-circle bg-light" style={{"width":" 55px", height:" 55px",}}>
-                                                <i class="fa fa-check text-primary"></i>
-                                            </div>
-                                            <div class="ms-4">
-                                                <p class="text-white mb-2">Quality</p>
-                                                <h5 class="text-white mb-0">Services</h5>
+                                            <div className="ms-4">
+                                                <p className="text-white mb-2">Expérience</p>
+                                                <h5 className="text-white mb-0">Médecins</h5>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-6">
-                                        <div class="d-flex align-items-center">
-                                            <div class="d-flex flex-shrink-0 align-items-center justify-content-center rounded-circle bg-light" style={{"width": "55px", height: "55px",}}>
-                                                <i class="fa fa-comment-medical text-primary"></i>
+                                    <div className="col-6">
+                                        <div className="d-flex align-items-center">
+                                            <div className="d-flex flex-shrink-0 align-items-center justify-content-center rounded-circle bg-light" style={{ "width":" 55px", "height":" 55px"}}>
+                                                <i className="fa fa-check text-primary"></i>
                                             </div>
-                                            <div class="ms-4">
-                                                <p class="text-white mb-2">Positive</p>
-                                                <h5 class="text-white mb-0">Consultation</h5>
+                                            <div className="ms-4">
+                                                <p className="text-white mb-2">Qualité</p>
+                                                <h5 className="text-white mb-0">Services</h5>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-6">
-                                        <div class="d-flex align-items-center">
-                                            <div class="d-flex flex-shrink-0 align-items-center justify-content-center rounded-circle bg-light" style={{"width": "55px", height: "55px",}}>
-                                                <i class="fa fa-headphones text-primary"></i>
+                                    <div className="col-6">
+                                        <div className="d-flex align-items-center">
+                                            <div className="d-flex flex-shrink-0 align-items-center justify-content-center rounded-circle bg-light" style={{ "width": "55px", "height": "55px"}}>
+                                                <i className="fa fa-comment-medical text-primary"></i>
                                             </div>
-                                            <div class="ms-4">
-                                                <p class="text-white mb-2">24 Hours</p>
-                                                <h5 class="text-white mb-0">Support</h5>
+                                            <div className="ms-4">
+                                                <p className="text-white mb-2">Consultation</p>
+                                                <h5 className="text-white mb-0">Positive</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="col-6">
+                                        <div className="d-flex align-items-center">
+                                            <div className="d-flex flex-shrink-0 align-items-center justify-content-center rounded-circle bg-light" style={{ "width": "55px", "height": "55px"}}>
+                                                <i className="fa fa-headphones text-primary"></i>
+                                            </div>
+                                            <div className="ms-4">
+                                                <p className="text-white mb-2">Support</p>
+                                                <h5 className="text-white mb-0">24/7</h5>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-6 pe-lg-0 wow fadeIn" data-wow-delay="0.5s" style={{"min-height": "400px",}}>
-                            <div class="position-relative h-100">
-                                <img class="position-absolute img-fluid w-100 h-100" src="img/feature.jpg" style={{"object-fit": "cover"}} alt=""/>
+                        <div className="col-lg-6 pe-lg-0 wow fadeIn" data-wow-delay="0.5s" style={{ "minHeight": "400px"}}>
+                            <div className="position-relative h-100">
+                                <img className="position-absolute img-fluid w-100 h-100" src="img/feature.jpg" style={{ "objectFit": "cover"}} alt=""/>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             
-        
-            <div class="container-xxl py-5">
-                <div class="container">
-                    <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style={{"max-width": "600px"}}>
-                        <p class="d-inline-block border rounded-pill py-1 px-4">Doctors</p>
-                        <h1>Our Experience Doctors</h1>
+            <div className="container-xxl py-5">
+                <div className="container">
+                    <div className="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style={{ "maxWidth": "600px"}}>
+                        <p className="d-inline-block border rounded-pill py-1 px-4">Médecins</p>
+                        <h1>Nos Médecins Expérimentés</h1>
                     </div>
-                    <div class="row g-4">
-                        <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                            <div class="team-item position-relative rounded overflow-hidden">
-                                <div class="overflow-hidden">
-                                    <img class="img-fluid" src="img/team-1.jpg" alt=""/>
+                    <div className="row g-4">
+                        <div className="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                            <div className="team-item position-relative rounded overflow-hidden">
+                                <div className="overflow-hidden">
+                                    <img className="img-fluid" src="img/team-1.jpg" alt=""/>
                                 </div>
-                                <div class="team-text bg-light text-center p-4">
-                                    <h5>Doctor Name</h5>
-                                    <p class="text-primary">Department</p>
-                                    <div class="team-social text-center">
-                                        <a class="btn btn-square" href=""><i class="fab fa-facebook-f"></i></a>
-                                        <a class="btn btn-square" href=""><i class="fab fa-twitter"></i></a>
-                                        <a class="btn btn-square" href=""><i class="fab fa-instagram"></i></a>
+                                <div className="team-text bg-light text-center p-4">
+                                    <h5>Nom du Médecin</h5>
+                                    <p className="text-primary">Cardiologue</p>
+                                    <div className="team-social text-center">
+                                        <a className="btn btn-square" href=""><i className="fab fa-facebook-f"></i></a>
+                                        <a className="btn btn-square" href=""><i className="fab fa-twitter"></i></a>
+                                        <a className="btn btn-square" href=""><i className="fab fa-instagram"></i></a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                            <div class="team-item position-relative rounded overflow-hidden">
-                                <div class="overflow-hidden">
-                                    <img class="img-fluid" src="img/team-2.jpg" alt=""/>
+                        <div className="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+                            <div className="team-item position-relative rounded overflow-hidden">
+                                <div className="overflow-hidden">
+                                    <img className="img-fluid" src="img/team-2.jpg" alt=""/>
                                 </div>
-                                <div class="team-text bg-light text-center p-4">
-                                    <h5>Doctor Name</h5>
-                                    <p class="text-primary">Department</p>
-                                    <div class="team-social text-center">
-                                        <a class="btn btn-square" href=""><i class="fab fa-facebook-f"></i></a>
-                                        <a class="btn btn-square" href=""><i class="fab fa-twitter"></i></a>
-                                        <a class="btn btn-square" href=""><i class="fab fa-instagram"></i></a>
+                                <div className="team-text bg-light text-center p-4">
+                                    <h5>Nom du Médecin</h5>
+                                    <p className="text-primary">Pneumologue</p>
+                                    <div className="team-social text-center">
+                                        <a className="btn btn-square" href=""><i className="fab fa-facebook-f"></i></a>
+                                        <a className="btn btn-square" href=""><i className="fab fa-twitter"></i></a>
+                                        <a className="btn btn-square" href=""><i className="fab fa-instagram"></i></a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                            <div class="team-item position-relative rounded overflow-hidden">
-                                <div class="overflow-hidden">
-                                    <img class="img-fluid" src="img/team-3.jpg" alt=""/>
+                        <div className="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                            <div className="team-item position-relative rounded overflow-hidden">
+                                <div className="overflow-hidden">
+                                    <img className="img-fluid" src="img/team-3.jpg" alt=""/>
                                 </div>
-                                <div class="team-text bg-light text-center p-4">
-                                    <h5>Doctor Name</h5>
-                                    <p class="text-primary">Department</p>
-                                    <div class="team-social text-center">
-                                        <a class="btn btn-square" href=""><i class="fab fa-facebook-f"></i></a>
-                                        <a class="btn btn-square" href=""><i class="fab fa-twitter"></i></a>
-                                        <a class="btn btn-square" href=""><i class="fab fa-instagram"></i></a>
-                                    </div>
+                                <div className="team-text bg-light text-center p-4">
+                                    <h5>Nom du Médecin</h5>
+                                    <p className="text-primary">Neurologue</p>
+                                    <div className="team-social text-center">
+                                        <a className="btn btn-square" href=""><i className="fab fa-facebook-f"></i></a>
+                                        <a className="btn btn-square" href=""><i className="fab fa-twitter"></i></a>
+                                        </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.7s">
-                            <div class="team-item position-relative rounded overflow-hidden">
-                                <div class="overflow-hidden">
-                                    <img class="img-fluid" src="img/team-4.jpg" alt=""/>
+                        <div className="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.7s">
+                            <div className="team-item position-relative rounded overflow-hidden">
+                                <div className="overflow-hidden">
+                                    <img clas    sName="img-fluid" src="img/team-4.jpg" alt=""/>
                                 </div>
-                                <div class="team-text bg-light text-center p-4">
-                                    <h5>Doctor Name</h5>
-                                    <p class="text-primary">Department</p>
-                                    <div class="team-social text-center">
-                                        <a class="btn btn-square" href=""><i class="fab fa-facebook-f"></i></a>
-                                        <a class="btn btn-square" href=""><i class="fab fa-twitter"></i></a>
-                                        <a class="btn btn-square" href=""><i class="fab fa-instagram"></i></a>
+                                <div className="team-text bg-light text-center p-4">
+                                    <h5>Nom du Médecin</h5>
+                                    <p className="text-primary">Orthopédiste</p>
+                                    <div className="team-social text-center">
+                                        <a className="btn btn-square" href=""><i className="fab fa-facebook-f"></i></a>
+                                        <a className="btn btn-square" href=""><i className="fab fa-twitter"></i></a>
+                                        <a className="btn btn-square" href=""><i className="fab fa-instagram"></i></a>
                                     </div>
                                 </div>
                             </div>
@@ -245,78 +210,36 @@ const Accueil = ()=>{
                     </div>
                 </div>
             </div>
-            
 
-
-            <div class="container-xxl py-5">
-                <div class="container">
-                    <div class="row g-5">
-                        <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
-                            <p class="d-inline-block border rounded-pill py-1 px-4">Appointment</p>
-                            <h1 class="mb-4">Make An Appointment To Visit Our Doctor</h1>
-                            <p class="mb-4">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo magna dolore erat amet</p>
-                            <div class="bg-light rounded d-flex align-items-center p-5 mb-4">
-                                <div class="d-flex flex-shrink-0 align-items-center justify-content-center rounded-circle bg-white" style={{"width": "55px", height:" 55px",}}>
-                                    <i class="fa fa-phone-alt text-primary"></i>
+            <div className="container-xxl py-5">
+                <div className="container">
+                    <div className="row g-5">
+                        <div className="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
+                            <p className="d-inline-block border rounded-pill py-1 px-4">Rendez-vous</p>
+                            <h1 className="mb-4">Prenez un Rendez-vous Pour Consulter Nos Médecins</h1>
+                            <p className="mb-4">Nous comprenons l'importance de votre santé. Prenez un rendez-vous dès aujourd'hui pour une consultation personnalisée avec nos médecins experts.</p>
+                            <div className="bg-light rounded d-flex align-items-center p-5 mb-4">
+                                <div className="d-flex flex-shrink-0 align-items-center justify-content-center rounded-circle bg-white" style={{ "width": "55px", "height": "55px"}}>
+                                    <i className="fa fa-phone-alt text-primary"></i>
                                 </div>
-                                <div class="ms-4">
-                                    <p class="mb-2">Call Us Now</p>
-                                    <h5 class="mb-0">+012 345 6789</h5>
+                                <div className="ms-4">
+                                    <p className="mb-2">Appelez-nous maintenant</p>
+                                    <h5 className="mb-0">+237 658 90 33 73 </h5>
                                 </div>
                             </div>
-                            <div class="bg-light rounded d-flex align-items-center p-5">
-                                <div class="d-flex flex-shrink-0 align-items-center justify-content-center rounded-circle bg-white" style={{"width": "55px", height: "55px",}}>
-                                    <i class="fa fa-envelope-open text-primary"></i>
+                            <div className="bg-light rounded d-flex align-items-center p-5">
+                                <div className="d-flex flex-shrink-0 align-items-center justify-content-center rounded-circle bg-white" style={{ "width": "55px", "height": "55px"}}>
+                                    <i className="fa fa-envelope-open text-primary"></i>
                                 </div>
-                                <div class="ms-4">
-                                    <p class="mb-2">Mail Us Now</p>
-                                    <h5 class="mb-0">info@example.com</h5>
+                                <div className="ms-4">
+                                    <p className="mb-2">Envoyez-nous un e-mail</p>
+                                    <h5 className="mb-0">info@example.com</h5>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.5s">
-                            <div class="bg-light rounded h-100 d-flex align-items-center p-5">
-                                <form>
-                                    <div class="row g-3">
-                                        <div class="col-12 col-sm-6">
-                                            <input type="text" class="form-control border-0" placeholder="Your Name" style={{"height": "55px"}}/>
-                                        </div>
-                                        <div class="col-12 col-sm-6">
-                                            <input type="email" class="form-control border-0" placeholder="Your Email" style={{"height": "55px",}}/>
-                                        </div>
-                                        <div class="col-12 col-sm-6">
-                                            <input type="text" class="form-control border-0" placeholder="Your Mobile" style={{"height": "55px"}}/>
-                                        </div>
-                                        <div class="col-12 col-sm-6">
-                                            <select class="form-select border-0" style={{"height": "55px"}}>
-                                                <option selected>Choose Doctor</option>
-                                                <option value="1">Doctor 1</option>
-                                                <option value="2">Doctor 2</option>
-                                                <option value="3">Doctor 3</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-12 col-sm-6">
-                                            <div class="date" id="date" data-target-input="nearest">
-                                                <input type="text"
-                                                    class="form-control border-0 datetimepicker-input"
-                                                    placeholder="Choose Date" data-target="#date" data-toggle="datetimepicker" style={{height: "55px"}}/>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 col-sm-6">
-                                            <div class="time" id="time" data-target-input="nearest">
-                                                <input type="text"
-                                                    class="form-control border-0 datetimepicker-input"
-                                                    placeholder="Choose Date" data-target="#time" data-toggle="datetimepicker" style={{height: "55px"}}/>
-                                            </div>
-                                        </div>
-                                        <div class="col-12">
-                                            <textarea class="form-control border-0" rows="5" placeholder="Describe your problem"></textarea>
-                                        </div>
-                                        <div class="col-12">
-                                            <button class="btn btn-primary w-100 py-3" type="submit">Book Appointment</button>
-                                        </div>
-                                    </div>
-                                </form>
+                        <div className="col-lg-6 wow fadeInUp" data-wow-delay="0.5s">
+                            <div className="bg-light rounded h-100 d-flex align-items-center p-5">
+                               
                             </div>
                         </div>
                     </div>
@@ -324,35 +247,36 @@ const Accueil = ()=>{
             </div>
         
         
-            <div class="container-xxl py-5">
-                <div class="container">
-                    <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style={{"max-width": "600px",}}>
-                        <p class="d-inline-block border rounded-pill py-1 px-4">Testimonial</p>
-                        <h1>What Say Our Patients!</h1>
+            <div className="container-xxl py-5">
+                <div className="container">
+                    <div className="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style={{ "maxWidth": "600px"}}>
+                        <p className="d-inline-block border rounded-pill py-1 px-4">Témoignages</p>
+                        <h1>Ce Que Disent Nos Patients !</h1>
                     </div>
-                    <div class="owl-carousel testimonial-carousel wow fadeInUp" data-wow-delay="0.1s">
-                        <div class="testimonial-item text-center">
-                            <img class="img-fluid bg-light rounded-circle p-2 mx-auto mb-4" src="img/testimonial-1.jpg" style={{"width": "100px", height: "100px"}}/>
-                            <div class="testimonial-text rounded text-center p-4">
+                    <div className="owl-carousel testimonial-carousel wow fadeInUp" data-wow-delay="0.1s">
+                        <div className="testimonial-item text-center">
+                            <img className="img-fluid bg-light rounded
+                            -circle p-2 mx-auto mb-4" src="img/testimonial-1.jpg" style={{ "width": "100px", "height": "100px"}}/>
+                            <div className="testimonial-text rounded text-center p-4">
                                 <p>Clita clita tempor justo dolor ipsum amet kasd amet duo justo duo duo labore sed sed. Magna ut diam sit et amet stet eos sed clita erat magna elitr erat sit sit erat at rebum justo sea clita.</p>
-                                <h5 class="mb-1">Patient Name</h5>
-                                <span class="fst-italic">Profession</span>
+                                <h5 className="mb-1">Nom du Patient</h5>
+                                <span className="fst-italic">Profession</span>
                             </div>
                         </div>
-                        <div class="testimonial-item text-center">
-                            <img class="img-fluid bg-light rounded-circle p-2 mx-auto mb-4" src="img/testimonial-2.jpg" style={{"width": "100px", height: "100px"}}/>
-                            <div class="testimonial-text rounded text-center p-4">
+                        <div className="testimonial-item text-center">
+                            <img className="img-fluid bg-light rounded-circle p-2 mx-auto mb-4" src="img/testimonial-2.jpg" style={{ "width": "100px", "height": "100px"}}/>
+                            <div className="testimonial-text rounded text-center p-4">
                                 <p>Clita clita tempor justo dolor ipsum amet kasd amet duo justo duo duo labore sed sed. Magna ut diam sit et amet stet eos sed clita erat magna elitr erat sit sit erat at rebum justo sea clita.</p>
-                                <h5 class="mb-1">Patient Name</h5>
-                                <span class="fst-italic">Profession</span>
+                                <h5 className="mb-1">Nom du Patient</h5>
+                                <span className="fst-italic">Profession</span>
                             </div>
                         </div>
-                        <div class="testimonial-item text-center">
-                            <img class="img-fluid bg-light rounded-circle p-2 mx-auto mb-4" src="img/testimonial-3.jpg" style={{"width": "100px", height: "100px",}}/>
-                            <div class="testimonial-text rounded text-center p-4">
+                        <div className="testimonial-item text-center">
+                            <img className="img-fluid bg-light rounded-circle p-2 mx-auto mb-4" src="img/testimonial-3.jpg" style={{ "width": "100px", "height": "100px"}}/>
+                            <div className="testimonial-text rounded text-center p-4">
                                 <p>Clita clita tempor justo dolor ipsum amet kasd amet duo justo duo duo labore sed sed. Magna ut diam sit et amet stet eos sed clita erat magna elitr erat sit sit erat at rebum justo sea clita.</p>
-                                <h5 class="mb-1">Patient Name</h5>
-                                <span class="fst-italic">Profession</span>
+                                <h5 className="mb-1">Nom du Patient</h5>
+                                <span className="fst-italic">Profession</span>
                             </div>
                         </div>
                     </div>
@@ -364,5 +288,7 @@ const Accueil = ()=>{
     );
 };
 
-
 export default Accueil;
+
+
+

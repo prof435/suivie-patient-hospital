@@ -1,26 +1,15 @@
-import React, { useState, useEffect } from 'react';
-
+import React, { useState } from 'react';
 import Footer from '../partials/footer';
-import { Link } from 'react-router-dom';
-import { NavBAr ,TopNav } from '../partials/header';
-const Rendez_vous= () => {
-  const [patients, setPatients] = useState([]);
+import { NavBAr, TopNav } from '../partials/header';
+import Datetime from 'react-datetime';
+import 'react-datetime/css/react-datetime.css';
+
+const Rendez_vous = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedDoctor, setSelectedDoctor] = useState(null);
-  const [appointmentDetails, setAppointmentDetails] = useState({});
-  const [confirmation, setConfirmation] = useState(false);
-
-  useEffect(() => {
-    // Récupérer les informations des patients depuis le backend Express.js
-    fetch('/api/patients') // Appel à l'API du backend pour obtenir les informations des patients
-      .then((response) => response.json()) // Conversion de la réponse en format JSON
-      .then((data) => setPatients(data)) // Mise à jour de l'état des patients avec les données reçues
-      .catch((error) => console.log(error)); // Gestion des erreurs
-  }, []);
-
-  const handleAccueilClick = () => {
-    window.location.href = '/accueil'; // Redirection vers la page d'accueil
-  };
+  const [appointmentTimes, setAppointmentTimes] = useState({});
+  const [submissionMessage, setSubmissionMessage] = useState('');
+  const [formErrors, setFormErrors] = useState({});
 
   const handleDateSelect = (date) => {
     setSelectedDate(date);
@@ -32,56 +21,69 @@ const Rendez_vous= () => {
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    // Enregistrer les détails du rendez-vous
-    setAppointmentDetails({
-      date: selectedDate,
-      doctor: selectedDoctor,
-      // Ajoutez ici d'autres détails du rendez-vous provenant du formulaire
-    });
-    setConfirmation(true);
+    if (!selectedDoctor || !selectedDate) {
+      setFormErrors({ doctor: !selectedDoctor, date: !selectedDate });
+      setSubmissionMessage("Veuillez remplir tous les champs obligatoires.");
+      return;
+    }
+    const selectedDateTime = selectedDate.format('YYYY-MM-DD HH:mm:ss');
+    if (appointmentTimes[selectedDateTime]) {
+      setSubmissionMessage("L'heure sélectionnée est déjà prise. Veuillez choisir une autre heure.");
+    } else {
+      setAppointmentTimes({ ...appointmentTimes, [selectedDateTime]: true });
+      setSubmissionMessage("Vos informations ont été soumises. Un médecin vous contactera.");
+    }
+    setTimeout(() => {
+      setSubmissionMessage('');
+    }, 1000);
   };
 
   return (
     <>
-      <NavBAr/>
-       <TopNav/>
-      {/* <div className="Docteur" style={{ backgroundImage: "url('chemin_vers_votre_image')" }}>
-        <div className="container">
-          <h1 className="titre">Prenez un rendez-vous</h1>
+      <TopNav />
+      <NavBAr />
 
-          <div className="calendrier">
-            <h2>Calendrier des rendez-vous</h2>
-            <Calendar onDateSelect={handleDateSelect} />
-          </div>
-
-          <div className="selection-medecin">
-            <h2>Sélection du médecin</h2>
-            <DoctorList doctors={doctors} onDoctorSelect={handleDoctorSelect} />
-          </div>
-
-          <div className="formulaire-rendezvous">
-            <h2>Formulaire de rendez-vous</h2>
-            <AppointmentForm onSubmit={handleFormSubmit} />
-          </div>
-
-          {confirmation && (
-            <div className="confirmation-rendezvous">
-              <h2>Confirmation du rendez-vous</h2>
-              <AppointmentConfirmation details={appointmentDetails} />
+      <div className="container mt-5">
+        <form onSubmit={handleFormSubmit}>
+          <div className="row g-3 justify-content-center">
+            <div className="col-md-4">
+              <select className={`form-select ${formErrors.doctor && 'is-invalid'}`} onChange={(e) => handleDoctorSelect(e.target.value)} required>
+                <option selected disabled>Choisissez un Médecin</option>
+                <option value="Dentiste">Dr. Jean Dupont (Dentiste)</option>
+                <option value="Cardiologue">Dr. Marie Leclerc (Cardiologue)</option>
+                <option value="Gynécologue">Dr. François Lefevre (Gynécologue)</option>
+                <option value="Ophtalmologue">Dr. Sophie Martin (Ophtalmologue)</option>
+                <option value="Psychiatre">Dr. Paul Durand (Psychiatre)</option>
+                <option value="Pédiatre">Dr. Laura Bernard (Pédiatre)</option>
+              </select>
+              {formErrors.doctor && <div className="invalid-feedback">Veuillez choisir un médecin.</div>}
             </div>
-          )}
-
-          <div className="messages-notifications">
-            <h2>Messages et notifications</h2>
-            <AppointmentMessages />
+            <div className="col-md-4">
+              <Datetime
+                inputProps={{ placeholder: "Choisissez une Date", className: `form-control ${formErrors.date && 'is-invalid'}` }}
+                onChange={handleDateSelect}
+                dateFormat="YYYY-MM-DD HH:mm:ss"
+                required
+              />
+              {formErrors.date && <div className="invalid-feedback">Veuillez choisir une date.</div>}
+            </div>
+            <div className="col-12 text-center mt-3">
+              <button className="btn btn-primary" type="submit">Soumettre</button>
+            </div>
+            <div className="col-12 mt-3">
+              {submissionMessage && <p>{submissionMessage}</p>}
+            </div>
           </div>
+        </form>
+      </div>
 
-          <button className="btn btn-primary" onClick={handleAccueilClick}>
-            Retour à l'accueil
-          </button>
+      <div className="row">
+        <div className="col-12">
+          <img src="/img/rpng.png" alt="" style={{ width: "100%", height: "auto" }} />
         </div>
-      </div> */}
-      <Footer />
+      </div>
+
+  
     </>
   );
 };

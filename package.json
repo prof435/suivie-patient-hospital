@@ -2,6 +2,7 @@
   "dependencies": {
     "@stripe/react-stripe-js": "^2.7.1",
     "axios": "^1.6.8",
-    "calendar": "^0.1.1"
+    "calendar": "^0.1.1",
+    "react-datetime": "^3.2.0"
   }
 }

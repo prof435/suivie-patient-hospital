@@ -30,19 +30,23 @@ const Inscription = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setMessage({content: '', type: 'none'});
+    setMessage({ content: '', type: 'none' });
 
     try {
-      const response = await axios.post(`http://${window.location.hostname}:5000/register`, {headers:{
-      'Content-Type' : 'application/json'}, data:{
-        nom,
-        prenom,
-        email,
-        mot_de_passe: password,
-        role: typeCompte,
-        numero_de_telephone: numero_de_telephone,
-        date_de_naissance: '1990-01-01' // Vous devrez remplacer cette valeur par la date de naissance de l'utilisateur
-      }});
+      const response = await axios.post(`http://${window.location.hostname}:5000/register`, {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        data: {
+          nom,
+          prenom,
+          email,
+          mot_de_passe: password,
+          role: typeCompte,
+          numero_de_telephone: numero_de_telephone,
+          date_de_naissance: '1990-01-01' // Vous devrez remplacer cette valeur par la date de naissance de l'utilisateur
+        }
+      });
 
       setMessage({ type: 'success', content: 'Utilisateur créé avec succès!' });
       setEmail('');
@@ -62,54 +66,50 @@ const Inscription = () => {
   return (
     <>
       <TopNav />
-
-      <div className="container mt-5" style={{ width: '50%' }}>
-        <h1 className="text-center mb-4">DimiSante Inscription</h1>
-        <div className="card">
-          <div className="card-body">
-            {message.content && (
-              <div className={`alert alert-${message.type}`} role="alert">
-                {message.content}
-              </div>
-            )}
-            <form onSubmit={handleSubmit}>
-              <div className="mb-3">
-                <label htmlFor="nom" className="form-label">Nom:</label>
-                <input type="text" className="form-control" id="nom" value={nom} onChange={handleNomChange} required />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="prenom" className="form-label">Prénom:</label>
-                <input type="text" className="form-control" id="prenom" value={prenom} onChange={handlePrenomChange} required />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="email" className="form-label">Numero de Téléphone:</label>
-                <input type="tel" className="form-control" id="numeroTel" value={numero_de_telephone} onChange={(e)=>{setNumeroDeTelephone(e.target.value)}} required />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="email" className="form-label">Email:</label>
-                <input type="email" className="form-control" id="email" value={email} onChange={handleEmailChange} required />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="password" className="form-label">Mot de passe:</label>
-                <input type="password" className="form-control" id="password" value={password} onChange={handlePasswordChange} required />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="typeCompte" className="form-label">Type de compte:</label>
-                <select className="form-select" id="typeCompte" value={typeCompte} onChange={(e) => { setTypeCompte(e.target.value) }} required>
-                  <option value="">-----------</option>
-                  <option value="Patient">Patient</option>
-                  <option value="Medecin">Medecin</option>
-                </select>
-              </div>
-              <button type="submit" className="btn btn-success w-100">Valider</button>
-            </form>
+      <div className="container mt-5">
+        <h1 className="text-center mb-4">Inscription à DimiSante</h1>
+        <div className="card bg-light shadow p-4" style={{ maxWidth: '400px', margin: '0 auto' }}>
+          {message.content && (
+            <div className={`alert alert-${message.type}`} role="alert">
+              {message.content}
+            </div>
+          )}
+          <form onSubmit={handleSubmit}>
+            <div className="mb-3">
+              <label htmlFor="nom" className="form-label">Nom:</label>
+              <input type="text" className="form-control" id="nom" value={nom} onChange={handleNomChange} required />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="prenom" className="form-label">Prénom:</label>
+              <input type="text" className="form-control" id="prenom" value={prenom} onChange={handlePrenomChange} required />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="numeroTel" className="form-label">Numéro de Téléphone:</label>
+              <input type="tel" className="form-control" id="numeroTel" value={numero_de_telephone} onChange={(e) => { setNumeroDeTelephone(e.target.value) }} required />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="email" className="form-label">Email:</label>
+              <input type="email" className="form-control" id="email" value={email} onChange={handleEmailChange} required />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="password" className="form-label">Mot de passe:</label>
+              <input type="password" className="form-control" id="password" value={password} onChange={handlePasswordChange} required />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="typeCompte" className="form-label">Type de compte:</label>
+              <select className="form-select" id="typeCompte" value={typeCompte} onChange={(e) => { setTypeCompte(e.target.value) }} required>
+                <option value="">-----------</option>
+                <option value="Patient">Patient</option>
+                <option value="Medecin">Médecin</option>
+              </select>
+            </div>
+            <button type="submit" className="btn btn-success w-100">Valider</button>
+          </form>
+          <div className="text-center mt-3">
+            <h4>Vous possédez déjà un compte ? <a href="/login" style={{ color: '#4CAF50', textDecoration: 'none' }}>Connectez-vous</a></h4>
           </div>
         </div>
-        <div className="text-center mt-3">
-          <h4>Vous possédez déjà un compte ? <a href="/login" style={{ color: '#4CAF50', textDecoration: 'none' }}>Connectez-vous</a></h4>
-        </div>
       </div>
-
       <Footer />
     </>
   );

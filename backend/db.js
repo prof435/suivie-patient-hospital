@@ -97,6 +97,11 @@ const Service = sequelize.define('Service', {
   description: {
     type: DataTypes.TEXT,
     allowNull: true
+  }, 
+  prixConsultation : {
+    type: DataTypes.BIGINT,
+    allowNull: true,
+    defaultValue: 2500
   }
 
 });
@@ -130,24 +135,41 @@ const Consultation = sequelize.define('Consultation', {
     primaryKey: true,
     autoIncrement: true
   },
-  title:{
+  title: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: false
   },
   date_heure: {
     type: DataTypes.DATE,
-    allowNull: false
+    allowNull: false,
+    defaultValue: DataTypes.NOW
   },
   description: {
     type: DataTypes.TEXT,
     allowNull: true
   },
+  
   etat: {
-    type: DataTypes.ENUM('Ouvert', 'Accepter', 'Fermer'),
-    defaultValue: "Ouvert"
+    type: DataTypes.ENUM('Ouvert', 'Accepter','Fermer' ),
+    allowNull: true,
+
+  },
+  paymentMethod: {
+    type: DataTypes.ENUM('Mobile Money', 'Visa', ),
+    allowNull: true,
+
+  },
+  mobileNumber: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    
+  },
+  cardNumber: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    
   }
 });
-
 
 
 // Modèle Rapport de Consultation

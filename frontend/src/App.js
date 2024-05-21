@@ -13,6 +13,7 @@ import RapportMedical from './views/rapportmedical';
 import Conseils from './views/conseils';
 import PayementPage from './views/payementpage';
 import ChatRoom from './views/chat';
+import ChatPage from './views/chatPage';
 //import Actualite from './views/actualite';
 
 function App() {
@@ -29,7 +30,7 @@ function App() {
         <Route path="/MedHome" element={<MedHome/>} />
   {/*       <Route path="/Actualite" element={<Actualite />} />*/}
         <Route path="/Docteur" element={<Docteur />} />
-        <Route path="/Chat" element={<ChatRoom />} />
+        <Route path="/Chat" element={<ChatPage />} />
         <Route path="/rapportmedical" element={<RapportMedical />} />
         <Route path="/conseils" element={<Conseils />} />
         <Route path="/payementpage " element={<PayementPage />} />

@@ -2,6 +2,7 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
+const { Op } = require('sequelize');
 const {sequelize, Utilisateur, Medecin, Patient, Service, ChatRoom, Consultation, Rendez_vous, RapportConsultation, Message, DossierMedical} = require('./db');
 
 const app = express();
@@ -99,7 +100,7 @@ app.post('/chatrooms/:chatroomId/messages', verifyToken, async (req, res) => {
 // renvoie la liste des messages du chatroom
 app.get('/chatrooms/:chatRoomId', verifyToken, async (req, res) => {
   try {
-    const chats =  await Message.findAll({where:{chatRoomId:req.params.chatRoomId}, order:[['date_envoi', 'DESC']]});
+    const chats =  await Message.findAll({where:{chatRoomId:req.params.chatRoomId}, order:[['date_envoi']]});
     res.status(200).json(chats);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -231,78 +232,108 @@ app.post('/consultation/rapport', verifyToken, async (req, res) => {
 
 //mise à jour
 app.post('/consultations/:consultationId/accept', verifyToken, async (req, res) => {
+  const transaction = await sequelize.transaction(); // Commencez une transaction
   try {
     if (req.user.role !== 'Medecin') {
       return res.status(403).json({ message: 'Accès refusé. Non autorisé' });
     }
 
     const consultationId = req.params.consultationId;
-    const consultation = await Consultation.findByPk(consultationId);
+    const consultation = await Consultation.findByPk(consultationId, { transaction });
 
     if (!consultation) {
       return res.status(404).json({ message: 'Consultation non trouvée' });
     }
-    const medecin = await Medecin.findOne({where:{UtilisateurId: req.user.id}});  
-    if (!medecin) {
-       return res.status(403).send({ message : 'Vous n\'avez pas acces à cette ressource (Medecin non trouvé)'})
-    }
-    var chatroom = null
-    const patient = await  Patient.findByPk(consultation.PatientId);
-    const room = await ChatRoom.findOne( {
-      MedecinId: medecin.id,
-      PatientId: consultation.PatientId
-    });
-    if (room) {
-      chatroom = room;
-    }else {
-      const room  = await ChatRoom.create(
-         {
-          MedecinId: medecin.id,
-          PatientId: consultation.PatientId,
-          nom: "chat between " + req.user.nom + " and patient " + consultation.PatientId
-        }
-      );
 
-      chatroom = room;
+    const medecin = await Medecin.findOne({ where: { UtilisateurId: req.user.id }, transaction });
+
+    if (!medecin) {
+      return res.status(403).json({ message: 'Vous n\'avez pas accès à cette ressource (Médecin non trouvé)' });
+    }
+
+    const patient = await Patient.findByPk(consultation.PatientId, { transaction });
+
+    let chatroom = await ChatRoom.findOne({
+      where: {
+        MedecinId: medecin.id,
+        PatientId: consultation.PatientId
+      },
+      transaction
+    });
+
+    if (!chatroom) {
+      chatroom = await ChatRoom.create({
+        MedecinId: medecin.id,
+        PatientId: consultation.PatientId,
+        nom: `chat between ${req.user.nom} and patient ${consultation.PatientId}`
+      }, { transaction });
     }
 
     if (chatroom) {
-      await Message.create({ChatRoomId: chatroom.id, contenu:consultation.title , UtilisateurId: patient.UtilisateurId, date_envoi: consultation.createdAt});
-      await Message.create({ChatRoomId: chatroom.id, contenu:consultation.description, UtilisateurId: patient.UtilisateurId, date_envoi: consultation.createdAt});
-      await Message.create({ChatRoomId: chatroom.id, contenu:"Merci je vous prends en charge.", UtilisateurId: medecin.UtilisateurId, date_envoi: new Date().toISOString()});
+      const messages = [
+        { ChatRoomId: chatroom.id, contenu: "Nouvelle consultation", UtilisateurId: null, date_envoi: new Date() },
+        { ChatRoomId: chatroom.id, contenu: consultation.title, UtilisateurId: patient.UtilisateurId, date_envoi: consultation.createdAt },
+        { ChatRoomId: chatroom.id, contenu: consultation.description, UtilisateurId: patient.UtilisateurId, date_envoi: consultation.createdAt },
+        { ChatRoomId: chatroom.id, contenu: "Merci je vous prends en charge.", UtilisateurId: medecin.UtilisateurId, date_envoi: new Date() }
+      ];
+
+      await Message.bulkCreate(messages, { transaction });
     }
 
-    consultation.etat = "Accepter"; // Setting etat to true to mark it as accepted
+    consultation.etat = "Accepter";
     consultation.MedecinId = medecin.id;
-    consultation.updatedAt = new Date().toISOString();
-    await consultation.save();
+    consultation.updatedAt = new Date();
+    await consultation.save({ transaction });
 
+    await transaction.commit(); // Validez la transaction
 
     return res.status(200).json({ message: 'Consultation acceptée avec succès', consultation, chatroom });
   } catch (err) {
+    await transaction.rollback(); // Annulez la transaction en cas d'erreur
     console.error(err);
     res.status(500).json({ error: err.message });
   }
 });
 
-//Creation 
+
+// Création d'une consultation
 app.post('/consultation', verifyToken, async (req, res) => {
+  const transaction = await sequelize.transaction(); // Commencez une transaction
   try {
-    const { title, description, service, dontKnow } = req.body;
-    const patient = await Patient.findOne({UtilisateurId: req.user.id});  
-    if (!patient) {
-      return res.status(403).send({ message : 'Vous n\'avez pas acces à cette ressource (patient non trouvé)'})
+    const { title, description, paymentMethod, mobileNumber, cardNumber, service, dontKnow } = req.body;
+
+    // Validation des champs
+    if (!title || !service) {
+      return res.status(400).json({ message: 'Titre et service sont requis' });
     }
+
+    const patient = await Patient.findOne({ where: { UtilisateurId: req.user.id }, transaction });
+    if (!patient) {
+      return res.status(403).json({ message: 'Vous n\'avez pas accès à cette ressource (patient non trouvé)' });
+    }
+
+    // Vérifiez que le service existe
+    const serviceExists = await Service.findByPk(service, { transaction });
+    if (!serviceExists) {
+      return res.status(400).json({ message: 'Service non trouvé' });
+    }
+
     const consultation = await Consultation.create({
-      date_heure: new Date().toISOString(),
+      date_heure: new Date(),
       title,
       description,
-      PatientId : patient.id,
-      ServiceId: service    
-    });
+      PatientId: patient.id,
+      ServiceId: service,
+      etat: 'Ouvert',
+      paymentMethod, mobileNumber, cardNumber
+    }, { transaction });
+
+    await transaction.commit(); // Validez la transaction
 
     return res.status(201).json(consultation);
   } catch (error) {
+    await transaction.rollback(); // Annulez la transaction en cas d'erreur
+    console.error(error);
     return res.status(500).json({ error: error.message });
   }
 });
@@ -326,6 +357,22 @@ app.get('/consultations', verifyToken, async (req, res) => {
     });
     return res.json(consultations);
   } catch (err) {
+
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+
+
+
+//obtenir un seul 
+app.get('/consultations/:id', verifyToken, async (req, res) => {
+  try {
+        
+    const consultations = await Consultation.findByPk(req.params.id);
+    return res.json(consultations);
+  } catch (err) {
+    
     return res.status(500).json({ error: err.message });
   }
 });

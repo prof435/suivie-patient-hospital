@@ -53,7 +53,12 @@ const NavBAr = ()=>{
             else{
                 alert("Une erreur s'est produite !!");
             }
-        })
+        }).catch((err)=>{
+            if(err?.code === 'ERR_BAD_REQUEST') {
+              window.location.href = "/login";
+            }
+            console.warn(err);
+          });
     };
     useEffect(()=>{
         if (!loaded){

@@ -23,7 +23,7 @@ const Docteur = () => {
           <h1 className="titre">Consulter mon dossier médical</h1>
 
           <div className="information-patient">
-            <h2>  <center>centerInformations personnelles  du patient</center></h2>
+            <h2>  <center>Informations personnelles  du patient</center></h2>
             {patients.length > 0 ? (
               <ul className="list-group">
                 {patients.map((patient) => (

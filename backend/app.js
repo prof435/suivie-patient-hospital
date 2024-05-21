@@ -187,11 +187,13 @@ app.post('/consultation/rapport', verifyToken, async (req, res) => {
     if(req.user.role !== "Medecin"){
       return res.status(403).send({ message : 'Vous n\'avez pas acces à cette ressource (Medecin ent non trouvé)'})
     }
-    const { contenu , MedecinId, PatientId} = req.body;
+    const { contenu , medecinId, patientId} = req.body;
+    const pat = await Patient.findOne({where:{UtilisateurId: patientId}});
+    const med = await Medecin.findOne({where:{UtilisateurId: medecinId}});
     const consultation = await Consultation.findOne({
       where: {
-        MedecinId: MedecinId,
-        PatientId: PatientId
+        MedecinId: med.id,
+        PatientId: pat.id
       },
       order: [
         ['createdAt', 'DESC']
@@ -209,8 +211,8 @@ app.post('/consultation/rapport', verifyToken, async (req, res) => {
 
     const chatRoom =  await ChatRoom.findOne({
       where: {
-        MedecinId: MedecinId,
-        PatientId: PatientId
+        MedecinId: med.id,
+        PatientId: pat.id
       },
       order: [
         ['createdAt', 'DESC']
@@ -226,6 +228,8 @@ app.post('/consultation/rapport', verifyToken, async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 });
+
+
 
 
 
@@ -380,12 +384,37 @@ app.get('/consultations/:id', verifyToken, async (req, res) => {
 
 
 
-
+//tous les services
 app.get('/services', verifyToken, async (req, res) => {
   try {
     const services = await Service.findAll();
 
     res.status(201).json(services);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+
+//tous les services
+app.get('/medecins/:ServiceId', verifyToken, async (req, res) => {
+  try {
+    const medecins = await Medecin.findAll({where:{ServiceId:req.params.ServiceId}});
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+    res.status(201).json(medecins);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -499,6 +528,31 @@ app.post('/login', async (req, res) => {
 
 
 
+//Creation 
+app.post('/consultation/rapport', verifyToken, async (req, res) => {
+  try {
+
+    if(req.user.role !== "Patient"){
+      return res.status(403).send({ message : 'Vous n\'avez pas acces à cette ressource (Medecin ent non trouvé)'})
+    }
+    const { medeciniId , dateheure} = req.body;
+    const pat = await Patient.findOne({where:{UtilisateurId: req.user.id}});
+    
+     
+   
+    const rendez_vous = await Rendez_vous.create({
+      createdAt: new Date().toISOString(),
+      date_heure: dateheure,
+      ConsultationId : null,
+      MedeciniId : medeciniId,
+      PatientId: pat.id 
+    });
+
+    return res.status(201).json({rdv:rendez_vous, message:"Rendez-vous enregistre avec succes !!"});
+  } catch (error) {
+    return res.status(500).json({ error: error, message:error.message });
+  }
+});
 
 
 // Mise à jour des informations utilisateur

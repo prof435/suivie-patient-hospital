@@ -258,11 +258,11 @@ Consultation.belongsTo(Service);
 
 //Synchronisation des modèles avec la base de données
 // sequelize.sync( {alter:false} )
-//     .then(() => {
-//       console.log('Modèles synchronisés avec la base de données');
+//      .then(() => {
+//        console.log('Modèles synchronisés avec la base de données');
 //    })
-//     .catch((err) => {
+//      .catch((err) => {
 //       console.error('Erreur lors de la synchronisation des modèles:', err);
-//    });
+//     });
 
 module.exports =  {sequelize, Utilisateur, Medecin, Patient, Service, ChatRoom, Consultation, Rendez_vous, RapportConsultation, Message, DossierMedical}

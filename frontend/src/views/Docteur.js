@@ -15,14 +15,15 @@ const Docteur = () => {
 
   return (
     <>
+    <TopNav/>
       <NavBAr/>
-      <TopNav/>
-      <div className="Docteur" style={{ backgroundImage: "url('chemin_vers_votre_image')" }}>
+      
+      <div className="Docteur" style={{ backgroundImage: "url('\img\nnn.jpg')" }}>
         <div className="container">
-          <h1 className="titre">Consulter un dossier médical</h1>
+          <h1 className="titre">Consulter mon dossier médical</h1>
 
           <div className="information-patient">
-            <h2>Informations du patient</h2>
+            <h2>  <center>centerInformations personnelles  du patient</center></h2>
             {patients.length > 0 ? (
               <ul className="list-group">
                 {patients.map((patient) => (
@@ -58,12 +59,12 @@ const Docteur = () => {
                 ))}
               </ul>
             ) : (
-              <p>Aucun patient enregistré</p>
+              <p>Aucun patient enregistre pour le moment </p>
             )}
           </div>
         </div>
       </div>
-      <Footer />
+    
     </>
   );
 };

@@ -148,9 +148,11 @@ const Accueil = () => {
                             <div className="team-item position-relative rounded overflow-hidden">
                                 <div className="overflow-hidden">
                                     <img className="img-fluid" src="img/team-1.jpg" alt=""/>
+
+                
                                 </div>
                                 <div className="team-text bg-light text-center p-4">
-                                    <h5>Nom du Médecin</h5>
+                                    <h5>Dr. Marie Leclerc</h5>
                                     <p className="text-primary">Cardiologue</p>
                                     <div className="team-social text-center">
                                         <a className="btn btn-square" href=""><i className="fab fa-facebook-f"></i></a>
@@ -166,8 +168,8 @@ const Accueil = () => {
                                     <img className="img-fluid" src="img/team-2.jpg" alt=""/>
                                 </div>
                                 <div className="team-text bg-light text-center p-4">
-                                    <h5>Nom du Médecin</h5>
-                                    <p className="text-primary">Pneumologue</p>
+                                    <h5>Dr.serge</h5>
+                                    <p className="text-primary">Dentiste</p>
                                     <div className="team-social text-center">
                                         <a className="btn btn-square" href=""><i className="fab fa-facebook-f"></i></a>
                                         <a className="btn btn-square" href=""><i className="fab fa-twitter"></i></a>
@@ -182,8 +184,8 @@ const Accueil = () => {
                                     <img className="img-fluid" src="img/team-3.jpg" alt=""/>
                                 </div>
                                 <div className="team-text bg-light text-center p-4">
-                                    <h5>Nom du Médecin</h5>
-                                    <p className="text-primary">Neurologue</p>
+                                    <h5>Dr. Laura Bernard</h5>
+                                    <p className="text-primary"> Pédiatre</p>
                                     <div className="team-social text-center">
                                         <a className="btn btn-square" href=""><i className="fab fa-facebook-f"></i></a>
                                         <a className="btn btn-square" href=""><i className="fab fa-twitter"></i></a>
@@ -197,8 +199,8 @@ const Accueil = () => {
                                     <img clas    sName="img-fluid" src="img/team-4.jpg" alt=""/>
                                 </div>
                                 <div className="team-text bg-light text-center p-4">
-                                    <h5>Nom du Médecin</h5>
-                                    <p className="text-primary">Orthopédiste</p>
+                                    <h5>Dr. Sophie Martin </h5>
+                                    <p className="text-primary">Ophtalmologue</p>
                                     <div className="team-social text-center">
                                         <a className="btn btn-square" href=""><i className="fab fa-facebook-f"></i></a>
                                         <a className="btn btn-square" href=""><i className="fab fa-twitter"></i></a>

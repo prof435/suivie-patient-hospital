@@ -399,20 +399,10 @@ app.get('/services', verifyToken, async (req, res) => {
 //tous les services
 app.get('/medecins/:ServiceId', verifyToken, async (req, res) => {
   try {
-    const medecins = await Medecin.findAll({where:{ServiceId:req.params.ServiceId}});
-
-
-
-
-
-
-
-
-    
-
-
-
-
+    const medecins = await Medecin.findAll({
+      where: { ServiceId: req.params.ServiceId },
+      include: [{ model: Utilisateur }] // Inclusion du modèle Utilisateur
+    });
 
     res.status(201).json(medecins);
   } catch (error) {
@@ -529,7 +519,7 @@ app.post('/login', async (req, res) => {
 
 
 //Creation 
-app.post('/consultation/rapport', verifyToken, async (req, res) => {
+app.post('/rendezvous', verifyToken, async (req, res) => {
   try {
 
     if(req.user.role !== "Patient"){
@@ -542,7 +532,7 @@ app.post('/consultation/rapport', verifyToken, async (req, res) => {
    
     const rendez_vous = await Rendez_vous.create({
       createdAt: new Date().toISOString(),
-      date_heure: dateheure,
+      date_heure: new Date(dateheure),
       ConsultationId : null,
       MedeciniId : medeciniId,
       PatientId: pat.id 
@@ -583,8 +573,6 @@ app.put('/users/:id', verifyToken, async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
-// ...
 
 
 // Endpoint de déconnexion

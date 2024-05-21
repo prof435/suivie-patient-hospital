@@ -34,7 +34,7 @@ const Rendez_vous = () => {
     }
     const selectedDateTime = selectedDate.format('YYYY-MM-DD HH:mm:ss');
     const authToken = localStorage.getItem('authToken');
-    axios.post("/rendezvous", {medeciniId: selectedDoctor, dateheure: appointmentTimes}, { headers: {
+    axios.post(`http://${window.location.hostname}:5000/rendezvous`, {medeciniId: selectedDoctor, dateheure: selectedDate}, { headers: {
       'Authorization': `Bearer ${authToken}`,
       'Content-Type': 'application/json'
     }}).then((res)=>{
@@ -179,8 +179,7 @@ const Rendez_vous = () => {
             <div className="col-md-4">
               <select className={`form-select ${formErrors.doctor && 'is-invalid'}`} onChange={(e) => handleDoctorSelect(e.target.value)} required>
                 <option selected disabled>Choisissez un Médecin</option>
-                <option selected disabled>Choisissez un service</option>
-                {medecins?.length > 0 && services.map((med)=>(
+                {medecins?.length > 0 && medecins.map((med)=>(
                 <option value={med.id} >{med.Utilisateur.nom + "  " + med.Utilisateur.prenom }</option>
                 ))}
               </select>

@@ -1,5 +1,5 @@
 import React from "react";
-import './Chat.css';
+import './chat_new.css';
 
 const ChatSpaceNew = ({ chatroom, user }) => {
   return (

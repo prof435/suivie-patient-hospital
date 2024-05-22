@@ -5,7 +5,7 @@ import Footer from "../partials/footer";
 import axios from "axios";
 import Sidebar from "./chatLeftSide";
 import ChatSpace from "./chatSpace";
-import './Chat.css';
+import './chat_new.css';
 
 const ChatPage = () => {
   const [alert, setAlert] = useState({ message: '', show: false, variant: 'info' });

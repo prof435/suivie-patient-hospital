@@ -84,8 +84,7 @@ const NavBAr = ()=>{
                         <a href="/Acceuil" class="nav-item nav-link"> Accueil</a>
                         <a href="/consultation" class="nav-item nav-link">Consultation{user?.role === "Patient" ? "" : "s"}</a>
                         <a href="/rendezvous" class="nav-item nav-link">rendezvous</a>
-                        <a href="/Docteur" class="nav-item nav-link"> Docteur</a>
-                        <a href="/Actualite" class="nav-item nav-link"> Actualite</a>
+                        <a href="/Docteur" class="nav-item nav-link"> ordonance</a>
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">langue</a>
                             <div class="dropdown-menu rounded-0 rounded-bottom m-0">

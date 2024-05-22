@@ -528,13 +528,11 @@ app.post('/rendezvous', verifyToken, async (req, res) => {
     const { medeciniId , dateheure} = req.body;
     const pat = await Patient.findOne({where:{UtilisateurId: req.user.id}});
     
-     
-   
     const rendez_vous = await Rendez_vous.create({
       createdAt: new Date().toISOString(),
       date_heure: new Date(dateheure),
       ConsultationId : null,
-      MedeciniId : medeciniId,
+      MedecinId : medeciniId,
       PatientId: pat.id 
     });
 
@@ -543,6 +541,37 @@ app.post('/rendezvous', verifyToken, async (req, res) => {
     return res.status(500).json({ error: error, message:error.message });
   }
 });
+
+
+//tous les services
+app.get('/rendezvous/', verifyToken, async (req, res) => {
+  try {
+    const medecin = await Medecin.findOne({UtilisateurId: req.user.id});  
+    const rendezvous = await Rendez_vous.findAll({
+      where: { MedecinId: medecin.id },
+      include: [{
+        model: Patient,
+        as: 'Patient',
+        attributes: ['id'],
+        include:[
+          {
+            model: Utilisateur,
+            attributes: ['id', 'nom', 'prenom', 'email', 'role'],
+            as: 'Utilisateur'
+          }
+        ]
+      },
+      ] // Inclusion du modèle Utilisateur
+    });
+
+    res.status(201).json(rendezvous);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+
+
 
 
 // Mise à jour des informations utilisateur
